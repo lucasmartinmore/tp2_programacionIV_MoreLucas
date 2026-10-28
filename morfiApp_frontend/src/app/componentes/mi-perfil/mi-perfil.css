@@ -1,0 +1,4 @@
+/* Foto de perfil circular de 120px, recortada para llenar el círculo, con borde verde */
+.foto { width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 4px solid var(--sabor-verde); }
+/* Sin foto: círculo verde con la inicial del nombre */
+.sin-foto { display: inline-flex; align-items: center; justify-content: center; background: var(--sabor-verde); color: #fff; font-family: 'Poppins', sans-serif; font-size: 3rem; font-weight: 700; }

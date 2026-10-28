@@ -1,0 +1,93 @@
+<!-- Banner principal: texto a la izquierda e ilustración a la derecha -->
+<section class="hero">
+  <div class="container">
+    <div class="row align-items-center">
+
+      <div class="col-md-7">
+        <!-- Texto pequeño de presentación -->
+        <p class="hero-etiqueta">Comunidad de recetas</p>
+        <!-- Título grande del banner -->
+        <h1 class="hero-titulo">¿Qué te gustaría cocinar hoy?</h1>
+        <!-- Bajada explicativa -->
+        <p class="hero-texto">Acá van a aparecer las recetas de los usuarios. Esta pantalla se completa en el Sprint 2.</p>
+      </div>
+
+      <!-- Columna de la ilustración: d-none la oculta en celulares; d-md-block la muestra desde tablet -->
+      <div class="col-md-5 d-none d-md-block text-center">
+        <!-- viewBox define el "lienzo" del dibujo (420 x 380); se adapta al ancho de la columna -->
+        <svg class="hero-ilustracion" viewBox="0 0 420 380" role="img" aria-label="Plato con torta, tenedor y cuchillo">
+          <!-- Círculo verde de fondo -->
+          <circle cx="210" cy="190" r="170" fill="#2f6b4f" />
+          <!-- Sol amarillo miel arriba a la derecha -->
+          <circle cx="345" cy="58" r="36" fill="#f4b942" />
+
+          <!-- Plato: círculo blanco y un aro fino adentro -->
+          <circle cx="210" cy="200" r="120" fill="#ffffff" />
+          <circle cx="210" cy="200" r="92" fill="none" stroke="#ead9c6" stroke-width="4" />
+
+          <!-- clipPath = "molde" que recorta las capas de la torta con esquinas redondeadas -->
+          <defs>
+            <clipPath id="moldeTorta"><rect x="150" y="165" width="120" height="74" rx="12" /></clipPath>
+          </defs>
+          <!-- Torta: se dibuja en capas y todo queda recortado por el molde -->
+          <g clip-path="url(#moldeTorta)">
+            <!-- Bizcocho de abajo -->
+            <rect x="150" y="213" width="120" height="26" fill="#e0a95c" />
+            <!-- Crema del medio -->
+            <rect x="150" y="201" width="120" height="12" fill="#fff3dc" />
+            <!-- Bizcocho de arriba -->
+            <rect x="150" y="180" width="120" height="21" fill="#e0a95c" />
+            <!-- Cobertura de chocolate con ondas -->
+            <path d="M150 165 H270 V184 Q258 196 246 184 Q234 196 222 184 Q210 196 198 184 Q186 196 174 184 Q162 196 150 184 Z" fill="#6b3f22" />
+          </g>
+          <!-- Cereza naranja arriba de la torta -->
+          <circle cx="210" cy="156" r="11" fill="#e8590c" />
+          <!-- Cabito de la cereza -->
+          <path d="M210 146 Q213 132 226 128" fill="none" stroke="#8bbf6a" stroke-width="3" stroke-linecap="round" />
+
+          <!-- Tenedor (a la izquierda): tres puntas, base redondeada y mango -->
+          <g transform="translate(58 110)" fill="#fff8f0">
+            <!-- Tres puntas -->
+            <rect x="0" y="0" width="6" height="46" rx="3" />
+            <rect x="10" y="0" width="6" height="46" rx="3" />
+            <rect x="20" y="0" width="6" height="46" rx="3" />
+            <!-- Base que une las puntas -->
+            <path d="M0 40 H26 V54 A13 13 0 0 1 0 54 Z" />
+            <!-- Mango -->
+            <rect x="10" y="62" width="6" height="92" rx="3" />
+          </g>
+
+          <!-- Cuchillo (a la derecha): hoja curva y mango -->
+          <g transform="translate(340 110)" fill="#fff8f0">
+            <!-- Hoja -->
+            <path d="M0 0 C20 8 22 56 8 98 H0 Z" />
+            <!-- Mango -->
+            <rect x="0" y="96" width="8" height="62" rx="4" />
+          </g>
+
+          <!-- Ramita de albahaca sobre el borde del plato: dos hojas y un tallo -->
+          <g transform="translate(290 112)">
+            <!-- Tallo -->
+            <path d="M0 0 Q-8 14 -20 22" fill="none" stroke="#2f6b4f" stroke-width="3" stroke-linecap="round" />
+            <!-- Hoja derecha -->
+            <ellipse cx="6" cy="-2" rx="9" ry="19" transform="rotate(35 6 -2)" fill="#8bbf6a" />
+            <!-- Hoja izquierda -->
+            <ellipse cx="-8" cy="-4" rx="9" ry="19" transform="rotate(-30 -8 -4)" fill="#6fa853" />
+          </g>
+
+          <!-- Tomate abajo a la izquierda: círculo naranja con su tapita verde -->
+          <circle cx="118" cy="304" r="26" fill="#e8590c" />
+          <path d="M118 281 L111 288 L118 286 L125 288 Z" fill="#8bbf6a" />
+          <!-- Brillo del tomate -->
+          <circle cx="108" cy="297" r="5" fill="#ffffff" opacity="0.35" />
+
+          <!-- Medio limón abajo a la derecha: círculo miel con gajos -->
+          <circle cx="302" cy="312" r="24" fill="#f4b942" />
+          <circle cx="302" cy="312" r="17" fill="#fff3dc" />
+          <!-- Líneas que separan los gajos -->
+          <path d="M302 295 V329 M285 312 H319 M290 300 L314 324 M314 300 L290 324" stroke="#f4b942" stroke-width="2" />
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>

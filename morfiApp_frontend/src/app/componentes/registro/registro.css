@@ -1,0 +1,2 @@
+/* Vista previa de la foto: círculo de 96px recortado (cover) con borde amarillo miel */
+.preview { width: 96px; height: 96px; object-fit: cover; border-radius: 50%; border: 3px solid var(--sabor-miel); }

@@ -1,0 +1,91 @@
+/* Fuentes de Google: Poppins para títulos  y Nunito Sans para el texto  */
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&family=Poppins:wght@500;600;700;800&display=swap');
+/* Trae todo Bootstrap (requiere: npm i bootstrap) */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* Variables de color de la marca: se cambian acá y se actualiza toda la app */
+:root {
+  /* Naranja principal (botones, links, acentos) */
+  --sabor-naranja: #e8590c;
+  /* Naranja más oscuro para hover */
+  --sabor-naranja-oscuro: #c94a08;
+  /* Amarillo miel de acento (subrayados, detalles) */
+  --sabor-miel: #f4b942;
+  /* Crema de fondo de la página */
+  --sabor-crema: #fff8f0;
+  /* Crema más fuerte para bloques de fondo */
+  --sabor-arena: #f6e6d3;
+  /* Marrón para textos y títulos */
+  --sabor-marron: #3b2314;
+  /* Marrón suave para textos secundarios */
+  --sabor-marron-suave: #7a5c47;
+  /* Color de los bordes finos */
+  --sabor-borde: #ead9c6;
+  /* Le decimos a Bootstrap que use nuestra tipografía de texto */
+  --bs-body-font-family: 'Nunito Sans', system-ui, sans-serif;
+  /* Y nuestro color de texto */
+  --bs-body-color: var(--sabor-marron);
+  /* Y el fondo */
+  --bs-body-bg: var(--sabor-crema);
+    /* Verde profundo: color de acción (botones, links, foco) */
+  --sabor-verde: #2f6b4f;
+  /* Verde más oscuro para hover */
+  --sabor-verde-oscuro: #214d3a;
+  /* Verde hoja claro para detalles y fondos suaves */
+  --sabor-hoja: #8bbf6a;
+}
+
+/* Fondo crema, texto marrón y suavizado de letra en toda la app */
+body { background: var(--sabor-crema); color: var(--sabor-marron); -webkit-font-smoothing: antialiased; }
+/* La zona principal ocupa al menos el alto de la pantalla menos la barra, así el fondo no queda cortado */
+main { min-height: calc(100vh - 72px); }
+
+/* Títulos con la fuente gruesa y compacta estilo */
+h1, h2, h3, h4, h5 { font-family: 'Poppins', sans-serif; font-weight: 700; letter-spacing: -0.02em; }
+
+/* Links verdes, sin subrayado hasta pasar el mouse */
+a { color: var(--sabor-verde); text-decoration: none; font-weight: 600; }
+/* Al pasar el mouse se oscurecen y se subrayan */
+a:hover { color: var(--sabor-verde-oscuro); text-decoration: underline; }
+
+/* Título de cada pantalla: grande y con una barrita de color debajo  */
+.titulo { font-size: 1.75rem; margin-bottom: 1.5rem; position: relative; padding-bottom: 0.75rem; }
+/* La barrita: un bloque amarillo miel de 48px debajo del título */
+.titulo::after { content: ''; position: absolute; left: 0; bottom: 0; width: 48px; height: 5px; border-radius: 3px; background: var(--sabor-miel); }
+/* Si el título está centrado, la barrita también */
+.text-center .titulo::after { left: 50%; transform: translateX(-50%); }
+
+/* Tarjeta blanca de bordes muy redondeados, borde fino y sombra suave (login, registro, perfil, modal) */
+.tarjeta { background: #fff; border: 1px solid var(--sabor-borde); border-radius: 1.25rem; box-shadow: 0 10px 30px rgba(59, 35, 20, 0.08); }
+
+/* Botón principal: píldora verde con letra blanca */
+.btn-primary {
+  /* Fondo y borde verdes */
+  --bs-btn-bg: var(--sabor-verde); --bs-btn-border-color: var(--sabor-verde);
+  /* Letra blanca */
+  --bs-btn-color: #fff;
+  /* Al pasar el mouse, verde más oscuro */
+  --bs-btn-hover-bg: var(--sabor-verde-oscuro); --bs-btn-hover-border-color: var(--sabor-verde-oscuro);
+  /* Al hacer clic */
+  --bs-btn-active-bg: #183a2b; --bs-btn-active-border-color: #183a2b;
+  /* Deshabilitado: mismo verde (Bootstrap lo aclara solo) */
+  --bs-btn-disabled-bg: var(--sabor-verde); --bs-btn-disabled-border-color: var(--sabor-verde);
+  /* Bordes totalmente redondeados */
+  border-radius: 999px;
+  /* Letra gruesa */
+  font-weight: 700;
+  /* Más espacio interno para que sea cómodo de tocar */
+  padding: 0.65rem 1.5rem;
+}
+
+/* Campos de formulario: bordes suaves y redondeados */
+.form-control { border: 1.5px solid var(--sabor-borde); border-radius: 0.75rem; padding: 0.65rem 0.9rem; background: #fffdfb; }
+/* Al hacer foco: borde verde y halo suave */
+.form-control:focus { border-color: var(--sabor-verde); box-shadow: 0 0 0 0.25rem rgba(47, 107, 79, 0.18); background: #fff; }
+/* Las etiquetas arriba de cada campo: semi-negrita y más chicas */
+.form-label { font-weight: 700; font-size: 0.9rem; color: var(--sabor-marron); margin-bottom: 0.35rem; }
+
+/* Etiqueta del perfil (usuario / administrador) en verde y con forma de píldora */
+.text-bg-primary { background-color: var(--sabor-verde) !important; border-radius: 999px; padding: 0.45em 0.9em; font-weight: 700; }
+/* Texto secundario en marrón suave */
+.text-muted { color: var(--sabor-marron-suave) !important; }

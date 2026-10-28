@@ -1,0 +1,17 @@
+/* Encabezado sin línea de Bootstrap; usamos la nuestra de color */
+.modal-header { border-bottom: 0; padding-bottom: 0; }
+/* Pie sin línea */
+.modal-footer { border-top: 0; }
+
+/* Círculo del ícono: 32px, centrado, letra blanca y gruesa */
+.icono { width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 1rem; flex-shrink: 0; }
+
+/* Éxito: círculo verde con una tilde */
+.tipo-exito .icono { background: #2f9e44; }
+.tipo-exito .icono::before { content: '\2713'; }
+/* Error: círculo rojo con signo de exclamación */
+.tipo-error .icono { background: #e03131; }
+.tipo-error .icono::before { content: '!'; }
+/* Info: círculo naranja con la letra i */
+.tipo-info .icono { background: var(--sabor-naranja); }
+.tipo-info .icono::before { content: 'i'; }

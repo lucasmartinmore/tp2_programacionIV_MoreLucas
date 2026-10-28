@@ -1,0 +1,10 @@
+/* Banner con fondo arena liso: las formas ahora las pone la ilustración */
+.hero { padding: 4rem 0; background: var(--sabor-arena); overflow: hidden; }
+/* Etiqueta chiquita en mayúsculas y verde */
+.hero-etiqueta { text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.8rem; font-weight: 700; color: var(--sabor-verde); margin-bottom: 0.75rem; }
+/* Título enorme y compacto, con ancho máximo para que no se estire */
+.hero-titulo { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.05; max-width: 14ch; margin-bottom: 1rem; }
+/* Bajada en marrón suave */
+.hero-texto { font-size: 1.1rem; color: var(--sabor-marron-suave); max-width: 42ch; margin: 0; }
+/* Ilustración: ocupa el ancho de su columna, con un máximo, y mantiene la proporción */
+.hero-ilustracion { width: 100%; max-width: 420px; height: auto; }

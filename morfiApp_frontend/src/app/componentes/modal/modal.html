@@ -1,0 +1,40 @@
+<!-- @if (...; as m) = si hay valor lo guarda con el nombre "m". modal.estado() es un signal: se lee con paréntesis -->
+@if (modal.estado(); as m) {
+  <!-- Solo dibujamos algo si el modal está abierto -->
+  @if (m.abierto) {
+    <!-- Fondo oscuro que tapa la pantalla (clase de Bootstrap) -->
+    <div class="modal-backdrop show"></div>
+
+    <!-- La ventana. "modal" y "d-block" son clases de Bootstrap: d-block la hace visible (por defecto los modales están ocultos) -->
+    <div class="modal d-block" tabindex="-1" role="dialog" aria-modal="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div [class]="'modal-content tarjeta tipo-' + m.tipo">
+          <!-- Encabezado con ícono y título -->
+          <div class="modal-header">
+            <h5 class="modal-title d-flex align-items-center gap-2">
+  <!-- Círculo con símbolo, su color y símbolo salen del tipo (ver modal.css) -->
+  <span class="icono"></span>
+  <!-- Título del aviso -->
+  {{ m.titulo }}
+</h5>
+          </div>
+
+          <!-- Cuerpo: los mensajes -->
+          <div class="modal-body">
+            <!-- @for repite el bloque por cada mensaje de la lista; "track $index" es obligatorio e identifica cada elemento -->
+            @for (mensaje of m.mensajes; track $index) {
+              <!-- Un párrafo por mensaje (mb-1 = margen inferior chico) -->
+              <p class="mb-1">{{ mensaje }}</p>
+            }
+          </div>
+
+          <!-- Pie con el botón -->
+          <div class="modal-footer">
+            <!-- (click) = al hacer clic se ejecuta cerrar() del servicio, que además ejecuta la acción pendiente (ej: ir al login) -->
+            <button type="button" class="btn btn-primary" (click)="modal.cerrar()">Aceptar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+}

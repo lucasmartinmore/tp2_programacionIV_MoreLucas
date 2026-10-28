@@ -1,0 +1,67 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card tarjeta">
+        <div class="card-body p-4">
+          <!-- Título de la pantalla -->
+          <h2 class="titulo">Bienvenido de nuevo</h2>
+
+          <!--
+            [formGroup]="form"    -> conecta este formulario con el FormGroup "form" del .ts
+            (ngSubmit)="enviar()" -> al enviar el formulario se ejecuta enviar() del .ts
+            novalidate            -> apaga las validaciones del navegador; usamos solo las de Angular
+          -->
+          <form [formGroup]="form" (ngSubmit)="enviar()" novalidate>
+            <!-- Campo: correo o usuario. mb-3 = margen inferior -->
+            <div class="mb-3">
+              <!-- label for="identificador" = etiqueta asociada al input con ese id (al tocarla se enfoca el input) -->
+              <label for="identificador" class="form-label">Correo o nombre de usuario</label>
+              <!--
+                formControlName="identificador" -> este input ES el FormControl "identificador" del .ts
+                [class.is-invalid]="mensaje('identificador')" -> si mensaje() devuelve un texto, agrega la clase
+                "is-invalid" de Bootstrap, que pinta el borde de rojo
+              -->
+              <input
+                id="identificador"
+                class="form-control"
+                formControlName="identificador"
+                [class.is-invalid]="mensaje('identificador')"
+              />
+              <!-- @if (...; as m) = si hay mensaje de error lo guarda en "m" y lo dibuja; si no, no se dibuja nada -->
+              @if (mensaje('identificador'); as m) {
+                <!-- invalid-feedback = texto rojo de error de Bootstrap; {{ m }} muestra el mensaje -->
+                <div class="invalid-feedback">{{ m }}</div>
+              }
+            </div>
+
+            <!-- Campo: contraseña. type="password" oculta lo que se escribe -->
+            <div class="mb-4">
+              <label for="password" class="form-label">Contraseña</label>
+              <!-- Igual que el campo anterior pero conectado al FormControl "password" -->
+              <input
+                id="password"
+                type="password"
+                class="form-control"
+                formControlName="password"
+                [class.is-invalid]="mensaje('password')"
+              />
+              <!-- Mensaje de error de la contraseña (igual que el anterior) -->
+              @if (mensaje('password'); as m) {
+                <div class="invalid-feedback">{{ m }}</div>
+              }
+            </div>
+
+            <!-- Botón de envío. [disabled]="..." lo deshabilita si el formulario es inválido o si ya estamos esperando al back. w-100 = ancho completo -->
+            <button type="submit" class="btn btn-primary w-100" [disabled]="form.invalid || enviando()">
+              <!-- Operador ternario: si enviando() es true muestra el primer texto; si no, el segundo -->
+              {{ enviando() ? 'Ingresando...' : 'Ingresar' }}
+            </button>
+          </form>
+
+          <!-- routerLink="/registro" = lleva al registro sin recargar la página -->
+          <p class="text-center mt-3 mb-0">¿No tenés cuenta? <a routerLink="/registro">Registrate</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,32 @@
+/* Barra blanca con una línea fina abajo (estilo elGourmet); el selector doble gana sobre navbar-dark de Bootstrap */
+.navbar.navbar-morfi {
+  /* Fondo blanco */
+  background: #fff;
+  /* Línea fina inferior en lugar de sombra pesada */
+  border-bottom: 1px solid var(--sabor-borde);
+  /* Alto cómodo */
+  padding: 0.9rem 0;
+  /* Color de los links normales (marrón) */
+  --bs-navbar-color: var(--sabor-marron);
+  /* Color al pasar el mouse */
+  --bs-navbar-hover-color: var(--sabor-verde);
+  /* Color del link de la pantalla actual */
+  --bs-navbar-active-color: var(--sabor-verde);
+}
+
+/* Nombre de la app: fuente de títulos, grande y naranja */
+.navbar-brand { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.5rem; letter-spacing: -0.03em; color: var(--sabor-verde) !important; display: inline-flex; align-items: center; gap: 0.5rem; }
+/* Detalle de marca: un círculo naranja con otro amarillo adentro */
+.navbar-brand::before { content: ''; width: 18px; height: 18px; border-radius: 50%; background: var(--sabor-naranja); box-shadow: inset 0 0 0 5px var(--sabor-miel); }
+
+/* Links del menú: letra semi-negrita y un poco más grande, con espacio entre ellos */
+.nav-link { font-weight: 600; padding: 0.5rem 0.9rem !important; position: relative; }
+/* Pantalla actual: negrita y subrayado grueso amarillo miel */
+.nav-link.active { font-weight: 700; }
+/* La barrita amarilla debajo del link activo */
+.nav-link.active::after { content: ''; position: absolute; left: 0.9rem; right: 0.9rem; bottom: 0; height: 3px; border-radius: 2px; background: var(--sabor-miel); }
+
+/* Botón "Salir": en una barra blanca el borde claro no se vería, así que lo hacemos marrón en píldora */
+.navbar-sabores .btn-outline-light { border: 1.5px solid var(--sabor-marron); color: var(--sabor-marron); border-radius: 999px; font-weight: 700; padding: 0.35rem 1rem; }
+/* Al pasar el mouse se rellena de marrón */
+.navbar-sabores .btn-outline-light:hover { background: var(--sabor-marron); color: #fff; }

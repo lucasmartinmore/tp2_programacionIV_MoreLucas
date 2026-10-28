@@ -1,0 +1,32 @@
+ <nav class="navbar navbar-expand navbar-dark navbar-morfi">
+ <div class="container">
+    <a class="navbar-brand" routerLink="/publicaciones">Morfi</a>
+    <ul class="navbar-nav ms-auto align-items-center">
+      <!-- Link a Publicaciones. routerLinkActive="active" = le agrega la clase "active" si es la pantalla actual -->
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/publicaciones" routerLinkActive="active">Publicaciones</a>
+      </li>
+      <!-- Link a Mi perfil (igual que el anterior) -->
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/mi-perfil" routerLinkActive="active">Mi perfil</a>
+      </li>
+
+      <!-- @if: si auth.usuario() tiene un usuario (hay sesión) mostramos "Salir"; si es null, el bloque @else -->
+      @if (auth.usuario()) {
+        <li class="nav-item">
+          <!-- (click)="salir()" = al hacer clic se ejecuta salir() del .ts. btn-outline-light = botón con borde claro -->
+          <button class="btn btn-outline-light btn-sm ms-2" (click)="salir()">Salir</button>
+        </li>
+      } @else {
+        <!-- Sin sesión: link al login -->
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/login" routerLinkActive="active">Ingresar</a>
+        </li>
+        <!-- Sin sesión: link al registro -->
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/registro" routerLinkActive="active">Registrarse</a>
+        </li>
+      }
+    </ul>
+  </div>
+</nav>

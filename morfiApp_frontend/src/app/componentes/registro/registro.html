@@ -1,0 +1,137 @@
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <!-- Ancho de la tarjeta en pantallas grandes -->
+    <div class="col-lg-8">
+      <!-- Tarjeta con nuestro estilo (bordes redondeados y sombra -->
+      <div class="card tarjeta">
+        <div class="card-body p-4">
+          <!-- Título de la pantalla -->
+          <h2 class="titulo">Creá tu cuenta</h2>
+
+          <!--
+            [formGroup]="form"    -> conecta este formulario con el FormGroup "form" del .ts
+            (ngSubmit)="enviar()" -> al enviar se ejecuta enviar() del .ts
+            novalidate            -> apaga las validaciones del navegador; usamos las de Angular
+          -->
+          <form [formGroup]="form" (ngSubmit)="enviar()" novalidate>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <!-- label for="nombre" = etiqueta asociada al input con ese id -->
+                <label for="nombre" class="form-label">Nombre</label>
+                <!--
+                  formControlName="nombre" -> este input ES el FormControl "nombre" del .ts
+                  [class.is-invalid]="mensaje('nombre')" -> si hay mensaje de error agrega la clase de Bootstrap que pinta el borde de rojo
+                -->
+                <input id="nombre" class="form-control" formControlName="nombre" [class.is-invalid]="mensaje('nombre')" />
+                <!-- @if (...; as m) = si hay mensaje de error lo guarda en "m" y lo dibuja; si no, no se dibuja nada -->
+                @if (mensaje('nombre'); as m) {
+                  <!-- invalid-feedback = texto rojo de error de Bootstrap -->
+                  <div class="invalid-feedback">{{ m }}</div>
+                }
+              </div>
+              <div class="col-md-6 mb-3">
+                <!-- Igual que nombre pero para el apellido -->
+                <label for="apellido" class="form-label">Apellido</label>
+                <input id="apellido" class="form-control" formControlName="apellido" [class.is-invalid]="mensaje('apellido')" />
+                @if (mensaje('apellido'); as m) {
+                  <div class="invalid-feedback">{{ m }}</div>
+                }
+              </div>
+            </div>
+
+            <!-- Fila 2: correo y nombre de usuario -->
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="email" class="form-label">Correo</label>
+                <input id="email" type="email" class="form-control" formControlName="email" [class.is-invalid]="mensaje('email')" />
+                @if (mensaje('email'); as m) {
+                  <div class="invalid-feedback">{{ m }}</div>
+                }
+              </div>
+              <div class="col-md-6 mb-3">
+                <!-- Igual que nombre pero para el nombre de usuario -->
+                <label for="username" class="form-label">Nombre de usuario</label>
+                <input id="username" class="form-control" formControlName="username" [class.is-invalid]="mensaje('username')" />
+                @if (mensaje('username'); as m) {
+                  <div class="invalid-feedback">{{ m }}</div>
+                }
+              </div>
+            </div>
+
+            <!-- Fila 3: contraseña y repetir contraseña. type="password" oculta lo que se escribe -->
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <!-- Igual que nombre pero con type="password" -->
+                <label for="password" class="form-label">Contraseña</label>
+                <input id="password" type="password" class="form-control" formControlName="password" [class.is-invalid]="mensaje('password')" />
+                @if (mensaje('password'); as m) {
+                  <div class="invalid-feedback">{{ m }}</div>
+                }
+              </div>
+              <div class="col-md-6 mb-3">
+                <!-- Igual que contraseña; su error propio es "Las contraseñas no coinciden" -->
+                <label for="repetirPassword" class="form-label">Repetir contraseña</label>
+                <input id="repetirPassword" type="password" class="form-control" formControlName="repetirPassword" [class.is-invalid]="mensaje('repetirPassword')" />
+                @if (mensaje('repetirPassword'); as m) {
+                  <div class="invalid-feedback">{{ m }}</div>
+                }
+              </div>
+            </div>
+
+            <!-- Fecha de nacimiento: type="date" muestra un calendario -->
+            <div class="mb-3">
+              <label for="fechaNacimiento" class="form-label">Fecha de nacimiento</label>
+              <input id="fechaNacimiento" type="date" class="form-control" formControlName="fechaNacimiento" [class.is-invalid]="mensaje('fechaNacimiento')" />
+              @if (mensaje('fechaNacimiento'); as m) {
+                <div class="invalid-feedback">{{ m }}</div>
+              }
+            </div>
+
+            <div class="mb-3">
+              <label for="descripcion" class="form-label">Descripción breve</label>
+              <textarea id="descripcion" rows="3" class="form-control" formControlName="descripcion" [class.is-invalid]="mensaje('descripcion')"></textarea>
+              @if (mensaje('descripcion'); as m) {
+                <div class="invalid-feedback">{{ m }}</div>
+              }
+            </div>
+
+            <!--
+              Foto de perfil: input de tipo "file". NO usa formControlName porque la foto no va dentro del FormGroup.
+              accept = el selector de archivos muestra solo esos tipos de imagen
+              (change)="alElegirArchivo($event)" -> cuando se elige un archivo se ejecuta esa función del .ts
+              errorArchivo() y preview() son signals, por eso llevan paréntesis
+            -->
+            <div class="mb-4">
+              <label for="imagen" class="form-label">Foto de perfil (opcional)</label>
+              <input
+                id="imagen"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                class="form-control"
+                [class.is-invalid]="errorArchivo()"
+                (change)="alElegirArchivo($event)"
+              />
+              <!-- Mensaje si la foto no es válida (tipo o tamaño) -->
+              @if (errorArchivo(); as e) {
+                <div class="invalid-feedback">{{ e }}</div>
+              }
+              <!-- Vista previa de la foto elegida. [src]="p" = la dirección sale de la variable p -->
+              @if (preview(); as p) {
+                <img [src]="p" alt="Vista previa de la foto" class="preview mt-3" />
+              }
+            </div>
+
+            <!-- Botón de envío. [disabled]="..." lo deshabilita si el formulario es inválido o si ya estamos esperando al back -->
+            <button type="submit" class="btn btn-primary w-100" [disabled]="form.invalid || enviando()">
+              <!-- Si enviando() es true muestra el primer texto; si no, el segundo -->
+              {{ enviando() ? 'Creando cuenta...' : 'Registrarme' }}
+            </button>
+          </form>
+
+          <!-- routerLink="/login" = lleva al login sin recargar la página -->
+          <p class="text-center mt-3 mb-0">¿Ya tenés cuenta? <a routerLink="/login">Ingresá</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
