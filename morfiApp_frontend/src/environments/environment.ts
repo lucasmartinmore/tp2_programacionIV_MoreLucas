@@ -7,6 +7,6 @@
  * - ¿Cómo sabe Angular cuál archivo usar? Por "fileReplacements" de angular.json, que genera `ng g environments`.
  */
 export const environment = {
-  // apiUrl = dirección del back ya desplegado en Vercel (reemplazala por la tuya)
-  apiUrl: 'api de versel que todavia no hice xd',
+  // apiUrl = dirección del back ya desplegado en Vercel
+  apiUrl: 'https://tp2-programacion-iv-more-lucas-ny4c.vercel.app',
 };
