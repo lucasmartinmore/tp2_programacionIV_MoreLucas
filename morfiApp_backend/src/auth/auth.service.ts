@@ -1,9 +1,9 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';// UnauthorizedException: error que Nest convierte en respuesta 401.
 import { PasswordHasher } from '@nestjs/authentication';// Tiene hash() (convertir contraseña en hash) y verify() (comprobarla).
-import { UsuariosService } from '../usuarios/usuarios.service';// UsuariosService: la lógica de usuarios (verificar, crear, buscar).
-import { ImagenesService } from '../imagenes/imagenes.service';// ImagenesService: guarda la foto de perfil.
-import { RegisterDto } from './dto/register.dto';// Los DTOs: la forma de los datos del registro y del login.
-import { LoginDto } from './dto/login.dto';
+import { UsuariosService } from '../usuarios/usuarios.service.js';// UsuariosService: la lógica de usuarios (verificar, crear, buscar).
+import { ImagenesService } from '../imagenes/imagenes.service.js';// ImagenesService: guarda la foto de perfil.
+import { RegisterDto } from './dto/register.dto.js';// Los DTOs: la forma de los datos del registro y del login.
+import { LoginDto } from './dto/login.dto.js';
 
 // Service de autenticación
 // La logica de registrarse / iniciar sesión

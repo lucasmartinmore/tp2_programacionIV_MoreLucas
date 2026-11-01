@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';// Sirve para crear la aplicación a partir de un módulo.
 import { ValidationPipe } from '@nestjs/common';// Revisa los datos que llegan y aplica las reglas de los DTOs.
-import { AppModule } from './app.module';// Módulo principal 
+import { AppModule } from './app.module.js';// Módulo principal 
 import * as dns from 'dns';// dns: herramienta de Node para consultar direcciones de internet (la usamos abajo para Mongo Atlas).
 
 // Le decimos a Node que use los servidores DNS de Google. Sin esto, a veces Mongo Atlas

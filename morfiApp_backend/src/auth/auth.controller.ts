@@ -12,9 +12,9 @@ import {
 } from '@nestjs/common';
 //FileInterceptor: interceptor que recibe archivos (usa la librería multer por dentro).
 import { FileInterceptor } from '@nestjs/platform-express';
-import { AuthService } from './auth.service';//El service con la lógica
-import { RegisterDto } from './dto/register.dto';//DTOs con las reglas de los datos
-import { LoginDto } from './dto/login.dto';
+import { AuthService } from './auth.service.js';//El service con la lógica
+import { RegisterDto } from './dto/register.dto.js';//DTOs con las reglas de los datos
+import { LoginDto } from './dto/login.dto.js';
 
 // Todas las rutas de esta clase empiezan con /auth.
 @Controller('auth')// Controller: recibe peticiones y las deriva al service

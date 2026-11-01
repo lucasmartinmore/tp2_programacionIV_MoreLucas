@@ -1,6 +1,6 @@
 // Controller: decorador de clase que atiende rutas. . .
 import { Controller, Get, Param, StreamableFile } from '@nestjs/common';//Get: ruta GET, Param: lee un pedazo variable de la URL  StreamableFile:devolver un archivo/bytes en vez de un JSON
-import { ImagenesService } from './imagenes.service';
+import { ImagenesService } from './imagenes.service.js';
 
 // Todas las rutas de este controller empiezan con /imagenes.
 @Controller('imagenes')

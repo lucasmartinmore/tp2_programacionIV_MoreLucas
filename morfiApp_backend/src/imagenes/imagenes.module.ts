@@ -1,9 +1,9 @@
 // Module: declara un módulo. MongooseModule: para registrar el schema.
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ImagenesService } from './imagenes.service';
-import { ImagenesController } from './imagenes.controller';
-import { Imagen, ImagenSchema } from './entities/imagen.entity';
+import { ImagenesService } from './imagenes.service.js';
+import { ImagenesController } from './imagenes.controller.js';
+import { Imagen, ImagenSchema } from './entities/imagen.entity.js';
 
 @Module({
   // Registra el schema de Imagen para poder pedir su modelo.

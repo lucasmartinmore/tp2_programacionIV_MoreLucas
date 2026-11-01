@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';// Convierte una clase en un módulo (un
 import { MongooseModule } from '@nestjs/mongoose';// Conecta Nest con MongoDB (usando la librería Mongoose).
 import { ConfigModule } from '@nestjs/config';// Lee el archivo .env (donde guardamos datos sensibles).
 import { AuthenticationModule } from '@nestjs/authentication';// Nos da la herramienta PasswordHasher (hash de contraseñas).
-import { UsuariosModule } from './usuarios/usuarios.module';
-import { AuthModule } from './auth/auth.module';
-import { ImagenesModule } from './imagenes/imagenes.module';
-import { PublicacionesModule } from './publicaciones/publicaciones.module';
+import { UsuariosModule } from './usuarios/usuarios.module.js';
+import { AuthModule } from './auth/auth.module.js';
+import { ImagenesModule } from './imagenes/imagenes.module.js';
+import { PublicacionesModule } from './publicaciones/publicaciones.module.js';
 
 @Module({
   // Lista de módulos que forman parte de la aplicación.

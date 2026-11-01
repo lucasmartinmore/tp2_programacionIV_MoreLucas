@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';// Injectable: marca la clase como service. NotFoundException: error que Nest convierte en respuesta 404
 import { InjectModel } from '@nestjs/mongoose';// InjectModel: pide el modelo de Mongoose a Nest
 import { Model, isValidObjectId } from 'mongoose';// isValidObjectId: función que dice si un texto tiene forma de id de Mongo
-import { Imagen } from './entities/imagen.entity';// La clase Imagen (su forma en Mongo)
+import { Imagen } from './entities/imagen.entity.js';// La clase Imagen (su forma en Mongo)
 
 // Service de imag: guarda y busca fotos.
 @Injectable()

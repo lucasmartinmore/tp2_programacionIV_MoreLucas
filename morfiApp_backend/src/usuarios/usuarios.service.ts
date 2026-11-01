@@ -1,8 +1,8 @@
 import { ConflictException, Injectable } from '@nestjs/common';// ConflictException: error que Nest convierte en respuesta 409 ("el recurso ya existe")
 import { InjectModel } from '@nestjs/mongoose';// InjectModel: pide a Nest el "modelo" de Mongoose (la herramienta para buscar y guardar en una colección).
 import { Model } from 'mongoose';
-import { Usuario } from './entities/usuario.entity';
-import { CreateUsuarioDto } from './dto/create-usuario.dto';// CreateUsuarioDto: la forma de los datos para crear un usuario.
+import { Usuario } from './entities/usuario.entity.js';
+import { CreateUsuarioDto } from './dto/create-usuario.dto.js';// CreateUsuarioDto: la forma de los datos para crear un usuario.
 
 
 @Injectable()

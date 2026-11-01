@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UsuariosService } from './usuarios.service';// El service de usuarios 
-import { Usuario, UsuarioSchema } from './entities/usuario.entity';// La clase Usuario (para su nombre) y su schema
+import { UsuariosService } from './usuarios.service.js';// El service de usuarios 
+import { Usuario, UsuarioSchema } from './entities/usuario.entity.js';// La clase Usuario (para su nombre) y su schema
 
 @Module({
   // forFeature registra el schema para poder pedir el modelo con @InjectModel.
