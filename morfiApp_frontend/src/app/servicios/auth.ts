@@ -1,13 +1,11 @@
 /**
- * Clase que hace un trabajo y que cualquier componente
- * puede pedir. Hay una unica instancia para toda la app (singleton)
  * Es el unico que habla con el back para registrar y loguear, y recuerda quien esta logueado
  * Se conecta por HTTP con el back (POST /auth/register y /auth/login); lo usan Registro, Login,
  * Navbar y MiPerfil.
  *
  * - ¿Por qué FormData en el registro? Porque viaja una imagen; un JSON no puede llevar archivos
  * - ¿Dónde guardás al usuario logueado? En un signal (avisa a la pantalla cuando cambia) y en localStorage
- *   (lo conserva al recargar). En el Sprint 3 se guarda también el token JWT
+ *   (lo conserva al recargar). En el Sprint 3 se guarda tambien el token JWT
  */
 import { Service, inject, signal } from '@angular/core';// 
 import { HttpClient } from '@angular/common/http';// HttpClient = la herramienta de Angular para hacer peticiones HTTP

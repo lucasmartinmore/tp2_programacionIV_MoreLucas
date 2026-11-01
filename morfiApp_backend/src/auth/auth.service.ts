@@ -9,7 +9,6 @@ import { LoginDto } from './dto/login.dto';
 // La logica de registrarse / iniciar sesión
 @Injectable()
 export class AuthService {
-  // Pedimos en el constructor las 3 herramientas que necesitamos
   // Nest nos entrega por inyección de dependencias
   constructor(
     private readonly usuariosService: UsuariosService, // Para trabajar con usuarios
@@ -24,9 +23,9 @@ export class AuthService {
     let imagenPerfilUrl: string | null = null;
     if (imagen) {
       const idImagen = await this.imagenesService.guardar(imagen);//La guardO en Mongo y recibo su id
-      // BASE_URL: dirección de este servidor (viene del .env). Si no está, usamos la local
+      // BASE_URL: dirección del servidor de env. Si no esta, usamos la local
       const baseUrl = process.env.BASE_URL ?? 'http://localhost:3000';
-      // Armamos la dirección completa de la foto: http://localhost:3000/imagenes/65f2c...
+      // Armo la dirección completa de la foto: http://localhost:3000/imagenes/65f2c...
       imagenPerfilUrl = `${baseUrl}/imagenes/${idImagen}`;
     }
 
@@ -36,7 +35,7 @@ export class AuthService {
     // Guardo el usuario { ...dto, password } copia todos los datos pero reemplazo "password" por el hash
     const usuario = await this.usuariosService.create({ ...dto, password }, imagenPerfilUrl);
 
-    // Respuesta: respondemos con el usuario sin la contraseña.
+    // Respuesta: respondo con el usuario sin la contraseña.
     return this.sinPassword(usuario);
   }
 
@@ -45,8 +44,8 @@ export class AuthService {
     // Busco user: busco al usuario por correo o username. Puede devolver null si no existe
     const usuario = await this.usuariosService.findByEmailOrUsername(dto.identificador);
 
-    // Armamos el error 401 una sola vez. Usamos el MISMO mensaje si falla el usuario o la clave,
-    // para no revelar qué correos están registrados.
+    // Armo el error 401 una sola vez. Uso el mismo mensaje si falla el usuario o la clave,
+    // para no revelar cuales estan registrado
     const error = new UnauthorizedException('Credenciales incorrectas. Verifique usuario o Contraseña');
     if (!usuario) throw error;
 
@@ -55,11 +54,11 @@ export class AuthService {
     // Si no coincide, lanzamos el mismo 401.
     if (!coincide) throw error;
 
-    // Finalizamos todo ok. Devolvemos todos los datos del usuario (sin contraseña). Nest responde 200 OK.
+    // Finalizo todo ok. Devuelvo todos los datos del usuario (sin contraseña). Nest responde 200 OK.
     return this.sinPassword(usuario);
   }
 
-  // Método privado (solo se usa dentro de esta clase). Prepara el usuario para enviarlo al cliente.
+  // Metodo privado que prepara el usuario para enviarlo al cliente.
   private sinPassword(usuario: { toObject: () => Record<string, any> }) {// toObject() convierte el documento de Mongo en un objeto comun
     // (__v es un contador interno de Mongo que al front no le sirve.)
     const { password, __v, ...resto } = usuario.toObject();// Con "password, __v, ...resto" sacamos esos dos campos y juntamos todo lo demás en "resto"

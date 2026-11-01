@@ -3,19 +3,19 @@ import { InjectModel } from '@nestjs/mongoose';// InjectModel: pide el modelo de
 import { Model, isValidObjectId } from 'mongoose';// isValidObjectId: función que dice si un texto tiene forma de id de Mongo
 import { Imagen } from './entities/imagen.entity';// La clase Imagen (su forma en Mongo)
 
-// Service de imágenes: guarda y busca fotos.
+// Service de imag: guarda y busca fotos.
 @Injectable()
 export class ImagenesService {
-  // Inyección por constructor: Nest nos entrega el modelo de la colección Imagen.
+  // Nest nos entrega el modelo de la colección Imagen.
   constructor(
     @InjectModel(Imagen.name) private readonly imagenModel: Model<Imagen>,
   ) {}
 
-  // Devuelve una promesa de texto: el id que Mongo le asigna.
+  // Devuelvo una prom de texto: el id que Mongo le asigna.
   async guardar(archivo: Express.Multer.File): Promise<string> { // Express.Multer.File es el tipo del archivo que llega (trae nombre, tipo, tamaño y los bytes)
     const creada = await this.imagenModel.create({
       datos: archivo.buffer, // Los bytes (archivo.buffer)
-      tipo: archivo.mimetype, //Tipo = por ej. "image/png".
+      tipo: archivo.mimetype, //Tipo = por ej png, jpg, etc
     });
     return creada._id.toString(); // Mongo le asigna un _id unico
   }
