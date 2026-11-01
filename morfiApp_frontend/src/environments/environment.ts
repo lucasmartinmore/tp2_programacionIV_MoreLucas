@@ -8,5 +8,5 @@
  */
 export const environment = {
   // apiUrl = dirección del back ya desplegado en Vercel
-  apiUrl: 'https://tp2-programacion-iv-more-lucas-ny4c.vercel.app',
+  apiUrl: 'https://tp2-programacion-iv-more-lucas.vercel.app',
 };
