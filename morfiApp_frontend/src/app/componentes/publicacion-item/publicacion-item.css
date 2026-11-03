@@ -1,0 +1,16 @@
+/* Foto del autor */
+.avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--sabor-verde); flex-shrink: 0; }
+/* Sin foto: círculo verde con la inicial  */
+.sin-foto { display: inline-flex; align-items: center; justify-content: center; background: var(--sabor-verde); color: #fff; font-family: 'Poppins', sans-serif; font-weight: 700; border: 0; }
+/* Imagen de la receta: ocupa todo el ancho */
+.imagen-publicacion { width: 100%; max-height: 380px; object-fit: cover; display: block; }
+/* El mensaje conserva los saltos*/
+.mensaje { white-space: pre-line; color: var(--sabor-marron-suave); }
+/* Botón de me gusta */
+.btn-megusta { display: inline-flex; align-items: center; gap: 0.5rem; background: transparent; border: 1.5px solid var(--sabor-borde); color: var(--sabor-marron-suave); border-radius: 999px; padding: 0.35rem 1rem; font-weight: 700; transition: all 0.15s ease; }
+/* Al pasar el mouse */
+.btn-megusta:hover:not(:disabled) { border-color: var(--sabor-naranja); color: var(--sabor-naranja); }
+/* Cuando ya di me gusta*/
+.btn-megusta.activo { background: var(--sabor-naranja); border-color: var(--sabor-naranja); color: #fff; }
+/* Mientras procesa: se ve apagado */
+.btn-megusta:disabled { opacity: 0.6; }

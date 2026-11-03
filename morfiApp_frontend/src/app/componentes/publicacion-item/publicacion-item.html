@@ -1,0 +1,54 @@
+<!-- Tarjeta de una publicación. "tarjeta" es nuestra clase global; "mb-4" = margen abajo -->
+<article class="card tarjeta mb-4">
+  <!-- Encabezado: autor y fecha -->
+  <div class="card-body pb-2 d-flex align-items-center gap-3">
+    <!-- Foto del autor si tiene; si no, un círculo con su inicial -->
+    @if (publicacion().usuario.imagenPerfilUrl) {
+      <img [src]="publicacion().usuario.imagenPerfilUrl" alt="Foto del autor" class="avatar" />
+    } @else {
+      <div class="avatar sin-foto">{{ publicacion().usuario.nombre.charAt(0) }}</div>
+    }
+    <!-- Nombre, usuario y fecha. flex-grow-1 = ocupa el espacio sobrante -->
+    <div class="flex-grow-1">
+      <!-- Nombre completo del autor -->
+      <div class="fw-bold">{{ publicacion().usuario.nombre }} {{ publicacion().usuario.apellido }}</div>
+      <!-- &#64; es el símbolo @ (en Angular un @ suelto es un bloque de control). Pipe date = formato de fecha -->
+      <small class="text-muted">&#64;{{ publicacion().usuario.username }} · {{ publicacion().createdAt | date: 'dd/MM/yyyy HH:mm' }}</small>
+    </div>
+    <!-- Botón eliminar: solo aparece si la publicación es mía -->
+    @if (esMia()) {
+      <button type="button" class="btn btn-outline-secondary btn-sm" (click)="pedirConfirmacion()">Eliminar</button>
+    }
+  </div>
+
+  <!-- Imagen de la publicación (solo si tiene) -->
+  @if (publicacion().imagenUrl) {
+    <img [src]="publicacion().imagenUrl" alt="Imagen de la publicación" class="imagen-publicacion" />
+  }
+
+  <!-- Título y mensaje -->
+  <div class="card-body">
+    <h3 class="h5 mb-2">{{ publicacion().titulo }}</h3>
+    <!-- La clase "mensaje" respeta los saltos de línea que escribió el usuario -->
+    <p class="mensaje mb-0">{{ publicacion().mensaje }}</p>
+  </div>
+
+  <!-- Pie: botón de me gusta -->
+  <div class="card-body pt-0">
+    <!-- [class.activo]="..." agrega la clase "activo" cuando leDiMeGusta() es true (pinta el corazón) -->
+    <button
+      type="button"
+      class="btn-megusta"
+      [class.activo]="leDiMeGusta()"
+      [disabled]="procesando()"
+      (click)="alternarMeGusta()"
+    >
+      <!-- Corazón dibujado con SVG (sin emojis). currentColor = toma el color del botón -->
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+      </svg>
+      <!-- Cantidad de me gusta -->
+      <span>{{ cantidad() }}</span>
+    </button>
+  </div>
+</article>

@@ -28,11 +28,17 @@
             }
           </div>
 
-          <!-- Pie con el botón -->
-          <div class="modal-footer">
-            <!-- (click) = al hacer clic se ejecuta cerrar() del servicio, que además ejecuta la acción pendiente (ej: ir al login) -->
-            <button type="button" class="btn btn-primary" (click)="modal.cerrar()">Aceptar</button>
-          </div>
+          <!-- Pie con los botones -->
+<div class="modal-footer">
+  <!-- Solo en modo pregunta aparece "Cancelar" -->
+  @if (m.confirmacion) {
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.cancelar()">Cancelar</button>
+  }
+  <!-- Botón principal: en modo pregunta dice "Confirmar", en un aviso común dice "Aceptar" -->
+  <button type="button" class="btn btn-primary" (click)="modal.cerrar()">
+    {{ m.confirmacion ? 'Confirmar' : 'Aceptar' }}
+  </button>
+</div>
         </div>
       </div>
     </div>

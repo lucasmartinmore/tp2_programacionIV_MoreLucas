@@ -8,3 +8,5 @@
 .hero-texto { font-size: 1.1rem; color: var(--sabor-marron-suave); max-width: 42ch; margin: 0; }
 /* Ilustración: ocupa el ancho de su columna, con un máximo, y mantiene la proporción */
 .hero-ilustracion { width: 100%; max-width: 420px; height: auto; }
+/* Selector de orden: ancho justo para su texto, no toda la fila */
+.selector-orden { width: auto; border-radius: 999px; border: 1.5px solid var(--sabor-borde); }

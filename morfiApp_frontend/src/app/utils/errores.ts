@@ -35,6 +35,12 @@ export function tituloDeError(status: number): string {
     case 409:
       return 'Dato ya registrado';
     // default = cualquier otro código no contemplado
+     // 403 = Forbidden: sabemos quién sos pero no tenés permiso para esto
+    case 403:
+      return 'Acción no permitida';
+    // 404 = Not Found: lo que buscás no existe
+    case 404:
+      return 'No encontrado';
     default:
       return 'Ocurrió un error';
   }

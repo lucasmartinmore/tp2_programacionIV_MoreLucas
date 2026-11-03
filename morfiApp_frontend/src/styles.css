@@ -89,3 +89,5 @@ a:hover { color: var(--sabor-verde-oscuro); text-decoration: underline; }
 .text-bg-primary { background-color: var(--sabor-verde) !important; border-radius: 999px; padding: 0.45em 0.9em; font-weight: 700; }
 /* Texto secundario en marrón suave */
 .text-muted { color: var(--sabor-marron-suave) !important; }
+/* Botón secundario (Cancelar): píldora con borde marrón suave, a juego con el principal */
+.btn-outline-secondary { --bs-btn-color: var(--sabor-marron-suave); --bs-btn-border-color: var(--sabor-borde); --bs-btn-hover-bg: var(--sabor-arena); --bs-btn-hover-color: var(--sabor-marron); --bs-btn-hover-border-color: var(--sabor-borde); border-radius: 999px; font-weight: 700; padding: 0.65rem 1.5rem; }

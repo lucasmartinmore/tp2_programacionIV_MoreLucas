@@ -1,0 +1,2 @@
+/* Vista previa de la imagen elegida*/
+.preview { max-height: 220px; max-width: 100%; border-radius: 0.75rem; object-fit: cover; display: block; }

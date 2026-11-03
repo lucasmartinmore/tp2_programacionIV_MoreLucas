@@ -1,0 +1,54 @@
+<div class="card tarjeta mb-4">
+  <div class="card-body p-4">
+    <!-- Título de la sección -->
+    <h2 class="h5 fw-bold mb-3">Compartí tu receta</h2>
+
+    <!-- [formGroup] conecta con el FormGroup del .ts; (ngSubmit) ejecuta enviar(); novalidate apaga las validaciones del navegador -->
+    <form [formGroup]="form" (ngSubmit)="enviar()" novalidate>
+      <div class="mb-3">
+        <label for="titulo" class="form-label">Título</label>
+        <!-- formControlName conecta este input con el control "titulo"; is-invalid pinta el borde rojo si hay error -->
+        <input id="titulo" class="form-control" formControlName="titulo" [class.is-invalid]="errorDe('titulo')" />
+        @if (errorDe('titulo'); as m) {
+          <div class="invalid-feedback">{{ m }}</div>
+        }
+      </div>
+
+      <!-- Campo mensaje -->
+      <div class="mb-3">
+        <label for="mensaje" class="form-label">Mensaje</label>
+        <textarea id="mensaje" rows="3" class="form-control" formControlName="mensaje" [class.is-invalid]="errorDe('mensaje')"></textarea>
+        @if (errorDe('mensaje'); as m) {
+          <div class="invalid-feedback">{{ m }}</div>
+        }
+      </div>
+
+      <!-- Imagen opcional. #inputArchivo es la marca que usa viewChild en el .ts -->
+      <div class="mb-3">
+        <label for="imagen" class="form-label">Imagen (opcional)</label>
+        <input
+          #inputArchivo
+          id="imagen"
+          type="file"
+          class="form-control"
+          accept="image/jpeg,image/png,image/webp"
+          [class.is-invalid]="errorArchivo()"
+          (change)="alElegirArchivo($event)"
+        />
+        <!-- Mensaje de error del archivo -->
+        @if (errorArchivo(); as e) {
+          <div class="invalid-feedback">{{ e }}</div>
+        }
+        <!-- Vista previa de la imagen elegida -->
+        @if (preview(); as p) {
+          <img [src]="p" alt="Vista previa" class="preview mt-3" />
+        }
+      </div>
+
+      <!-- Botón de enviar: deshabilitado si el formulario es inválido o ya se está enviando -->
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid || enviando()">
+        {{ enviando() ? 'Publicando...' : 'Publicar' }}
+      </button>
+    </form>
+  </div>
+</div>
