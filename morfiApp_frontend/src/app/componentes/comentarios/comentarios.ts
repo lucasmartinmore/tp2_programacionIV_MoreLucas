@@ -23,7 +23,7 @@ export class Comentarios implements OnInit {
   private modal = inject(ModalService);
 
   
-  readonly porTanda = 5;// Cuantos coment trae por tanda
+  readonly porTanda = 3;// Cuantos coment trae por tanda
   // Los comentarios mostrados (se van acumulando: "cargar mas" )
   comentarios = signal<Comentario[]>([]);
   // Total que hay en el servidor

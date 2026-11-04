@@ -149,7 +149,8 @@ export class Auth {
     );
   }
 
-  // La sesión vencio: cierro y mando al login
+  // La sesion vencio
+  // cierro y mando al login
   private vencio() {
     this.logout();
     this.modal.mostrar('info', 'Sesión vencida', 'Volvé a iniciar sesión.');

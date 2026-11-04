@@ -113,13 +113,15 @@ export class PublicacionesService {
 
   // ME GUSTA: uno por usuario
   async darMeGusta(id: string, usuarioId: string) {
-    // Compruebo que existan la publicacion y el usuario (404 si no)
+    // Compruebo que existan la publicacion y el usuario 
+    // (404 si no)
     await this.buscarActiva(id);
     await this.validarUsuario(usuarioId);
-    // Convertimos el id del usuario a ObjectId real
+    // Convertimos el id del usuario a ObjectId 
     const uid = new Types.ObjectId(usuarioId);
 
-    // Filtro: la publicación activa en el usuario no esta en mg ($ne = "distinto de...")
+    // Filtro: la publi activa en el usuario
+    // no esta en mg ($ne = "distinto de...")
     const filtro: Record<string, any> = { _id: id, activa: true, meGusta: { $ne: uid } };
     // Cambio: $addToSet agrega el id a la lista (sin duplicar) y $inc suma 1 al contador
     const cambio: Record<string, any> = { $addToSet: { meGusta: uid }, $inc: { cantidadMeGusta: 1 } };

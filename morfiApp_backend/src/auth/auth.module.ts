@@ -19,7 +19,7 @@ import { AuthGuard } from './auth.guard.js';
       useFactory: () => ({
         secret: process.env.JWT_SECRET,
         // El token vence a los 40segund
-        signOptions: { expiresIn: '40s' },
+        signOptions: { expiresIn: '1m' },
       }),
     }),
   ],

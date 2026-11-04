@@ -21,7 +21,7 @@ export class Cargando implements OnInit {
     this.auth.autorizar().subscribe({
       // Valido ---> a publicaciones
       next: () => this.router.navigate(['/publicaciones']),
-      // Invalido o vencido ---> login (el interceptor ya limpio la sesión)
+      // Invalido o vencido ---> login (el interceptor ya limpio la sesion)
       error: () => this.router.navigate(['/login']),
     });
   }
