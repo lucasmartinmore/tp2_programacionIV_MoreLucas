@@ -28,13 +28,14 @@
 
   <!-- Título y mensaje -->
   <div class="card-body">
-    <h3 class="h5 mb-2">{{ publicacion().titulo }}</h3>
+    <!-- Título clickeable: lleva a la página de la publicación (/publicaciones/ID) -->
+<h3 class="h5 mb-2"><a [routerLink]="['/publicaciones', publicacion()._id]" class="text-decoration-none text-reset">{{ publicacion().titulo }}</a></h3>
     <!-- La clase "mensaje" respeta los saltos de línea que escribió el usuario -->
     <p class="mensaje mb-0">{{ publicacion().mensaje }}</p>
   </div>
 
   <!-- Pie: botón de me gusta -->
-  <div class="card-body pt-0">
+  <div class="card-body pt-0 d-flex align-items-center gap-2">
     <!-- [class.activo]="..." agrega la clase "activo" cuando leDiMeGusta() es true (pinta el corazón) -->
     <button
       type="button"
@@ -50,5 +51,7 @@
       <!-- Cantidad de me gusta -->
       <span>{{ cantidad() }}</span>
     </button>
+    <!-- dentro del pie, después del botón de me gusta -->
+  <a [routerLink]="['/publicaciones', publicacion()._id]" class="btn btn-outline-secondary btn-sm">Ver y comentar</a>
   </div>
 </article>

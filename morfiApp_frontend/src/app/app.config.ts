@@ -9,14 +9,15 @@
  */
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';// función que activa el router (el sistema de navegación entre pantallas)
-import { provideHttpClient } from '@angular/common/http';// provideHttpClient = función que activa HttpClient (la herramienta para hablar con el back
+import { provideHttpClient, withInterceptors  } from '@angular/common/http';// provideHttpClient = función que activa HttpClient (la herramienta para hablar con el back
 import { routes } from './app.routes';
+import { authInterceptor } from './interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   
   providers: [// herramientas que Angular tiene que preparar al arrancar
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideHttpClient(),// Permite hacer peticiones HTTP al back 
+    provideHttpClient(withInterceptors([authInterceptor])), // registra el interceptor para TODAS las peticiones
   ],
 };

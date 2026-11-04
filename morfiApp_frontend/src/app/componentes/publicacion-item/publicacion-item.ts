@@ -17,9 +17,11 @@ import { ModalService } from '../../servicios/modal';
 import { PublicacionesService } from '../../servicios/publicaciones';
 import { mensajesDeError, tituloDeError } from '../../utils/errores';
 import { Publicacion } from '../../models/publicacion';// El tipo de dato de una publi
+import { RouterLink } from '@angular/router';
+
 
 @Component({
-  imports: [DatePipe],
+  imports: [DatePipe, RouterLink],
   selector: 'app-publicacion-item',
   styleUrl: './publicacion-item.css',
   templateUrl: './publicacion-item.html',
@@ -55,8 +57,8 @@ export class PublicacionItem implements OnInit {
     this.procesando.set(true);
     const id = this.publicacion()._id;
     const peticion = this.leDiMeGusta()
-      ? this.service.quitarMeGusta(id, usuario._id)
-      : this.service.darMeGusta(id, usuario._id);
+      ? this.service.quitarMeGusta(id)
+      : this.service.darMeGusta(id);
 
     // Ejecutamos la peticion
     peticion.subscribe({
@@ -88,7 +90,7 @@ export class PublicacionItem implements OnInit {
     if (!usuario) return;
     const id = this.publicacion()._id;
 
-    this.service.eliminar(id, usuario._id).subscribe({
+    this.service.eliminar(id).subscribe({
       //le avisamos al padre para que saque la tarjeta de la lista
       next: () => this.eliminada.emit(id),
       error: (err: HttpErrorResponse) =>

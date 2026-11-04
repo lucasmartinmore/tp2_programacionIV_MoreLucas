@@ -150,9 +150,7 @@ export class Registro implements OnInit {
       next: () => {
         this.enviando.set(false);
         // Modal de éxito; al tocar "Aceptar" navegamos al login
-        this.modal.mostrar('exito', '¡Cuenta creada!', 'Ya podés iniciar sesión con tus datos.', () =>
-          this.router.navigate(['/login']),
-        );
+        this.modal.mostrar('exito', '¡Cuenta creada!', 'Ya estás dentro.', () => this.router.navigate(['/publicaciones']));
       },
       // Error (400, 409, sin conexión...)
       error: (err: HttpErrorResponse) => {

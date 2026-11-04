@@ -1,0 +1,25 @@
+<!-- Contenedor centrado de Bootstrap -->
+<div class="container py-4" style="max-width: 800px">
+  <a routerLink="/publicaciones" class="btn btn-outline-secondary btn-sm mb-3">Volver</a>
+
+  <!-- "as p" guarda la publicación en una variable; solo se muestra cuando ya llegó -->
+  @if (publicacion(); as p) {
+    <article class="card tarjeta mb-4">
+      <!-- Imagen GRANDE (el TP pide ver la publicación grande) -->
+      @if (p.imagenUrl) {
+        <img [src]="p.imagenUrl" alt="Imagen de la publicación" class="w-100" style="max-height: 520px; object-fit: cover" />
+      }
+      <div class="card-body">
+        <h1 class="h3">{{ p.titulo }}</h1>
+        <!-- &#64; = símbolo @ -->
+        <small class="text-muted">Por {{ p.usuario.nombre }} {{ p.usuario.apellido }} (&#64;{{ p.usuario.username }}) · {{ p.createdAt | date: 'dd/MM/yyyy HH:mm' }}</small>
+        <p class="mt-3" style="white-space: pre-line">{{ p.mensaje }}</p>
+        <small class="text-muted">{{ p.cantidadMeGusta }} me gusta</small>
+      </div>
+    </article>
+    <!-- Los comentarios: le pasamos el id de la publicación al hijo -->
+    <app-comentarios [publicacionId]="p._id" />
+  } @else {
+    <p>Cargando publicación...</p>
+  }
+</div>

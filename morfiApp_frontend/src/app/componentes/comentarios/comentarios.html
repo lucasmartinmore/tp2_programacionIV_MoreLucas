@@ -1,0 +1,53 @@
+<!-- Sección de comentarios -->
+<section class="mt-4">
+  <h2 class="h5 mb-3">Comentarios ({{ total() }})</h2>
+
+  <!-- Formulario para comentar. (ngSubmit) se dispara con Enter o con el botón -->
+  <!-- Antes: <form (ngSubmit)="enviar()" class="mb-4"> -->
+<!-- Ahora: escuchamos el evento normal "submit", frenamos el envío del navegador y llamamos a enviar() -->
+<form (submit)="$event.preventDefault(); enviar()" class="mb-4">
+    <!-- [formControl] conecta el textarea con el FormControl "nuevo" -->
+    <textarea class="form-control mb-2" rows="2" maxlength="500" placeholder="Escribí un comentario" [formControl]="nuevo"></textarea>
+    <!-- Mensaje de error solo si ya lo tocó y está vacío -->
+    @if (nuevo.touched && nuevo.hasError('required')) {
+      <small class="text-danger d-block mb-2">El comentario no puede estar vacío</small>
+    }
+    <button type="submit" class="btn btn-primary btn-sm">Comentar</button>
+  </form>
+
+  <!-- Lista: @for recorre; "track c._id" le dice a Angular cómo identificar cada elemento -->
+  @for (c of comentarios(); track c._id) {
+    <article class="comentario mb-3 p-3">
+      <!-- Autor y fecha -->
+      <div class="d-flex justify-content-between">
+        <strong>{{ c.usuario.nombre }} {{ c.usuario.apellido }}</strong>
+        <small class="text-muted">
+          {{ c.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+          <!-- Cartel "editado" si el back marcó modificado: true (lo pide el TP) -->
+          @if (c.modificado) { <em>(editado)</em> }
+        </small>
+      </div>
+
+      <!-- Si este comentario se está editando: textarea + botones; si no: el texto -->
+      @if (editandoId() === c._id) {
+        <textarea class="form-control my-2" rows="2" maxlength="500" [formControl]="edicion"></textarea>
+        <button type="button" class="btn btn-primary btn-sm me-2" (click)="guardar(c)">Guardar</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm" (click)="cancelar()">Cancelar</button>
+      } @else {
+        <p class="mb-1 mt-2 texto">{{ c.mensaje }}</p>
+        <!-- Solo el autor ve "Editar" -->
+        @if (esMio(c)) {
+          <button type="button" class="btn btn-link btn-sm p-0" (click)="editar(c)">Editar</button>
+        }
+      }
+    </article>
+  } @empty {
+    <!-- Se muestra si la lista está vacía -->
+    <p class="text-muted">Todavía no hay comentarios. ¡Sé el primero!</p>
+  }
+
+  <!-- "Cargar más" solo si faltan comentarios por traer -->
+  @if (hayMas()) {
+    <button type="button" class="btn btn-outline-secondary btn-sm" [disabled]="cargando()" (click)="cargar()">Cargar más</button>
+  }
+</section>

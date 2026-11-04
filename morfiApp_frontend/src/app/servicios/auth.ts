@@ -1,60 +1,164 @@
-/**
- * Es el unico que habla con el back para registrar y loguear, y recuerda quien esta logueado
- * Se conecta por HTTP con el back (POST /auth/register y /auth/login); lo usan Registro, Login,
- * Navbar y MiPerfil.
- *
- * - ¿Por qué FormData en el registro? Porque viaja una imagen; un JSON no puede llevar archivos
- * - ¿Dónde guardás al usuario logueado? En un signal (avisa a la pantalla cuando cambia) y en localStorage
- *   (lo conserva al recargar). En el Sprint 3 se guarda tambien el token JWT
- */
-import { Service, inject, signal } from '@angular/core';// 
-import { HttpClient } from '@angular/common/http';// HttpClient = la herramienta de Angular para hacer peticiones HTTP
-import { tap } from 'rxjs';// tap = operador de RxJS: permite "espiar" la respuesta (hacer algo con ella) sin modificarla
-import { environment } from '../../environments/environment';// environment = objeto con la URL del back (cambia entre tu compu y producción)
+import { Service, inject, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+// Router para llevar al login cuando vence la sesión
+import { Router } from '@angular/router';
+import { map, tap } from 'rxjs';// tap = "hacer algo con la respuesta sin cambiarla"; map = transformarla
+import { environment } from '../../environments/environment';
 import { Usuario } from '../models/usuario';
+import { ModalService } from './modal';// El modal para preguntar por la sesion 
 
-// Nombre con el que guardamos al usuario en localStorage (la "memoria" del navegador)
-const CLAVE_STORAGE = 'usuarioDeMorfiApp';
+// Lo que ahora devuelven login y registro
+interface RespuestaAuth {
+  usuario: Usuario;
+  token: string;
+}
+
+// Claves con las que guardo en localStorage
+const CLAVE_USUARIO = 'usuarioRedSocial';
+const CLAVE_TOKEN = 'tokenRedSocial';
+const AVISO_ANTES_DE_VENCER_MS = 10 * 1000; // 10 segundos
 
 @Service()
 export class Auth {
-
+  // Herramientas que necesita este servicio (con inject(), como pide @Service)
   private http = inject(HttpClient);
-  usuario = signal<Usuario | null>(this.leerGuardado());// Arranca con lo que haya en localStorage (o null si no hay nadie logueado)
+  private modal = inject(ModalService);
+  private router = inject(Router);
 
-  // Registro: recibe un FormData (datos del formulario + imagen) y lo manda al back
-  // No hay que escribir el Content-Type a mano porque el navegador lo completa solo con FormData
-  // Devuelve un Observable (petición que NO se hace hasta que alguien llama a .subscribe())
+  // Usuario logueado (signal) o null; arranca con lo guardado
+  usuario = signal<Usuario | null>(this.leerUsuario());
+  // Temporizadores activos (para poder cancelarlos)
+  private temporizadorAviso?: ReturnType<typeof setTimeout>;
+  private temporizadorVencimiento?: ReturnType<typeof setTimeout>;
+
+   
+
+  // Registro: el back devuelve { usuario, token }
+  // guardo la sesión y devuelvo el usuario
   register(datos: FormData) {
-    // post<Usuario> = POST con la respuesta tipada como Usuario; datos es el cuerpo enviado
-    return this.http.post<Usuario>(`${environment.apiUrl}/auth/register`, datos);
+    return this.http.post<RespuestaAuth>(`${environment.apiUrl}/auth/register`, datos).pipe(
+      tap((r) => this.guardarSesion(r)),
+      map((r) => r.usuario),
+    );
   }
 
-  
-  login(identificador: string, password: string) {// Login: manda contraseña como JSON
-    // Empezamos la petición POST con un objeto { identificador, password } como cuerpo (se convierte en JSON)
-    return this.http.post<Usuario>(`${environment.apiUrl}/auth/login`, { identificador, password })
-      // pipe = encadena operadores sobre la respuesta; tap guarda al usuario SOLO si el back respondió bien (200)
-      .pipe(tap((usuario) => this.guardar(usuario)));
+  //Login: igual que el registro
+  //los component reciben un usuario
+  login(identificador: string, password: string) {
+    return this.http.post<RespuestaAuth>(`${environment.apiUrl}/auth/login`, { identificador, password }).pipe(
+      tap((r) => this.guardarSesion(r)),
+      map((r) => r.usuario),
+    );
   }
 
-  // Cerrar sesión
+  // POST /auth/autorizar: Valido mi token
+  //  Devuelvo mis datos actuales
+  autorizar() {
+    return this.http.post<Usuario>(`${environment.apiUrl}/auth/autorizar`, {}).pipe(
+      tap((usuario) => {
+        this.guardarUsuario(usuario);// Actualizo el usuario con los datos frescos
+        // Reinicio los avisos segun el token guardado
+        this.programarAvisos();
+      }),
+    );
+  }
+
+  // POST /auth/refrescar
+  // pido un token nuevo (otros 15s)
+  refrescar() {
+    return this.http.post<{ token: string }>(`${environment.apiUrl}/auth/refrescar`, {}).pipe(
+      tap((r) => {
+        localStorage.setItem(CLAVE_TOKEN, r.token);
+        this.programarAvisos();
+      }),
+    );
+  }
+
+  // Devuelve el token guardado (o null)
+  // El interceptor lo usa en cada pedido
+  token(): string | null {
+    return localStorage.getItem(CLAVE_TOKEN);
+  }
+
+  // Cierra la sesion 
+  // borra todo y cancela los avisos
   logout() {
-    // Borramos al usuario de la memoria del navegador
-    localStorage.removeItem(CLAVE_STORAGE);
-    // Y del signal (null = nadie logueado); la navbar se actualiza sola
+    this.cancelarAvisos();
+    localStorage.removeItem(CLAVE_TOKEN);
+    localStorage.removeItem(CLAVE_USUARIO);
     this.usuario.set(null);
   }
 
-  // Guarda al usuario en localStorage y en el signal
-  private guardar(usuario: Usuario) {
-    localStorage.setItem(CLAVE_STORAGE, JSON.stringify(usuario));// localStorage solo guarda texto, por eso JSON.stringify convierte el objeto a texto
-    this.usuario.set(usuario);// Actualizamos el signal para que las pantallas se enteren
+  // Guarda token y usuario 
+  // arranca el contador
+  private guardarSesion(r: RespuestaAuth) {
+    localStorage.setItem(CLAVE_TOKEN, r.token);
+    this.guardarUsuario(r.usuario);
+    this.programarAvisos();
   }
 
-  // Lee lo guardado en localStorage; devuelve el usuario o null si no hay nada
-  private leerGuardado(): Usuario | null {
-    const guardado = localStorage.getItem(CLAVE_STORAGE);// getItem devuelve el texto guardado o null si no existe
-    return guardado ? JSON.parse(guardado) : null;// Si hay texto, JSON.parse lo convierte de nuevo en objeto; si no, null
+  // Guarda el usuario en localStorage y en el signal
+  private guardarUsuario(usuario: Usuario) {
+    localStorage.setItem(CLAVE_USUARIO, JSON.stringify(usuario));
+    this.usuario.set(usuario);
+  }
+
+  // Leo el usuario guardado (null si no hay)
+  private leerUsuario(): Usuario | null {
+    const guardado = localStorage.getItem(CLAVE_USUARIO);
+    return guardado ? JSON.parse(guardado) : null;
+  }
+
+  // Lee "exp" (vencimiento, en segundos) del payload del token
+  //  El payload es la parte del medio
+  private vencimientoMs(): number | null {
+    const token = this.token();
+    if (!token) return null;
+    try {
+      // base64url
+      // atob lo decodifica; JSON.parse lo convierte en objeto
+      const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+      return payload.exp * 1000; // exp está en segundos; lo paso a milisegundos
+    } catch {
+      return null;
+    }
+  }
+
+  // Programa el aviso a vencer a los 5s
+  // y el cierre de sesion al vencer
+  private programarAvisos() {
+    this.cancelarAvisos();
+    const exp = this.vencimientoMs();
+    if (!exp) return;
+    // Cuanto falta para el aviso 
+    // si ya pas, avisa enseguida
+    const paraAviso = Math.max(0, exp - Date.now() - AVISO_ANTES_DE_VENCER_MS);
+    const paraVencer = Math.max(0, exp - Date.now());
+    this.temporizadorAviso = setTimeout(() => this.preguntarExtension(), paraAviso);
+    this.temporizadorVencimiento = setTimeout(() => this.vencio(), paraVencer);
+  }
+
+  // Modal de confirmacion: si acepta, refresco el token 
+  //el 401, si pasara, lo maneja el interceptor
+  private preguntarExtension() {
+    // El texto se arma con el valor de AVISO_ANTES_DE_VENCER_MS, asi nunca queda desactualizado
+    const segundos = AVISO_ANTES_DE_VENCER_MS / 1000;
+    const tiempo = segundos >= 60 ? `${segundos / 60} minutos` : `${segundos} segundos`;
+    this.modal.confirmar('Tu sesión está por vencer', `Te quedan ${tiempo} de sesión. ¿Querés extenderla?`, () =>
+      this.refrescar().subscribe({ error: () => {} }),
+    );
+  }
+
+  // La sesión vencio: cierro y mando al login
+  private vencio() {
+    this.logout();
+    this.modal.mostrar('info', 'Sesión vencida', 'Volvé a iniciar sesión.');
+    this.router.navigate(['/login']);
+  }
+
+  // Cancela los temporizadores 
+  private cancelarAvisos() {
+    clearTimeout(this.temporizadorAviso);
+    clearTimeout(this.temporizadorVencimiento);
   }
 }

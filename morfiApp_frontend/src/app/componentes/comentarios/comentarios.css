@@ -1,0 +1,4 @@
+/* Cada comentario: caja con borde suave */
+.comentario { border: 1.5px solid var(--sabor-borde); border-radius: 12px; background: #fff; }
+/* Respeta los saltos de línea */
+.texto { white-space: pre-line; color: var(--sabor-marron-suave); }

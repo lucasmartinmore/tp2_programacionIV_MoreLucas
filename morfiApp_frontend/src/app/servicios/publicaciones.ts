@@ -34,18 +34,24 @@ export class PublicacionesService {
     return this.http.post<Publicacion>(this.url, datos);
   }
 
+  // GET: Trae una publi por id (pagde detalle)
+  obtener(id: string) {
+    return this.http.get<Publicacion>(`${this.url}/${id}`);
+  }
+
   // DELETE /publicaciones/:id?usuarioId: baja logica
-  eliminar(id: string, usuarioId: string) {
-    return this.http.delete<void>(`${this.url}/${id}`, { params: { usuarioId } });
+  // el back lo saca del token (el interceptor lo agrega)
+  eliminar(id: string) {
+    return this.http.delete<void>(`${this.url}/${id}`);
   }
 
   // POST /publicaciones/:id/me-gusta: dar me gusta
-  darMeGusta(id: string, usuarioId: string) {
-    return this.http.post<ResumenMeGusta>(`${this.url}/${id}/me-gusta`, { usuarioId });
+  darMeGusta(id: string) {
+    return this.http.post<ResumenMeGusta>(`${this.url}/${id}/me-gusta`, {});
   }
 
   // DELETE /publicaciones/:id/me-gusta?usuarioId: quitar me gusta
-  quitarMeGusta(id: string, usuarioId: string) {
-    return this.http.delete<ResumenMeGusta>(`${this.url}/${id}/me-gusta`, { params: { usuarioId } });
+  quitarMeGusta(id: string) {
+    return this.http.delete<ResumenMeGusta>(`${this.url}/${id}/me-gusta`);
   }
 }

@@ -14,7 +14,9 @@ async function bootstrap() {
     // whitelist: true -> elimina los campos que el DTO no declara.
     // forbidNonWhitelisted: true -> en vez de eliminarlos en silencio, responde error 400.
     // Con esto nadie puede mandar "perfil: administrador" al registrarse.
-    new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
+    // transform: true -> convierte los datos que llegan al tipo del DTO. Lo necesitamos porque los
+    // parametros de la URL (?offset=5) llegan como TEXTO y los queremos como NUMERO.
+    new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }),
   );
 
   // CORS: el navegador, por seguridad, no deja que una página (Angular, en otra dirección)

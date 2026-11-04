@@ -9,12 +9,16 @@ import {
   Post, // @Post(): ruta que responde al verbo POST
   UploadedFile, // @UploadedFile(): lee el archivo subido
   UseInterceptors, // @UseInterceptors(): agrega un "interceptor" a la ruta
+  Req,
+  UseGuards
 } from '@nestjs/common';
 //FileInterceptor: interceptor que recibe archivos (usa la librería multer por dentro).
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthService } from './auth.service.js';//El service con la lógica
 import { RegisterDto } from './dto/register.dto.js';//DTOs con las reglas de los datos
 import { LoginDto } from './dto/login.dto.js';
+import { AuthGuard } from './auth.guard.js';
+import type { RequestConUsuario } from './auth.types.js';
 
 // Todas las rutas de esta clase empiezan con /auth.
 @Controller('auth')// Controller: recibe peticiones y las deriva al service
@@ -58,5 +62,23 @@ export class AuthController {
   login(@Body() dto: LoginDto) {
     // Derivamos al service.
     return this.authService.login(dto);
+  }
+
+  // POST /auth/autorizar: valida el token (lo hace el guard) y devuelve los datos del usuario
+  @UseGuards(AuthGuard) // sin token valido el guard corta con 401 no se ejec
+  @Post('autorizar')
+  @HttpCode(HttpStatus.OK) // POST responde 201 por defecto
+  autorizar(@Req() req: RequestConUsuario) {
+    // req.user lo dejo el guard; sub = _id del usuario
+    return this.authService.autorizar(req.user.sub);
+  }
+
+  // POST /auth/refrescar: devuelve un token nuevo con 15s mas
+  @UseGuards(AuthGuard)
+  @Post('refrescar')
+  @HttpCode(HttpStatus.OK)
+  refrescar(@Req() req: RequestConUsuario) {
+    // Pasamos el payload verificado para reconstruir el token
+    return this.authService.refrescar(req.user);
   }
 }

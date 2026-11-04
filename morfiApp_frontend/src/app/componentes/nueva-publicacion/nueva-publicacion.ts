@@ -98,9 +98,6 @@ export class NuevaPublicacion {
     const formData = new FormData();
     formData.append('titulo', titulo);
     formData.append('mensaje', mensaje);
-    // PROVISORIO (Sprint 2): quien publica
-    // Con JWT (Sprint 3) esto sale del token
-    formData.append('usuarioId', usuario._id);
 
     if (this.archivo) formData.append('imagen', this.archivo);// 'imagen' tiene que ser EXACTAMENTE el nombre que espera el back en FileInterceptor
     this.enviando.set(true);
