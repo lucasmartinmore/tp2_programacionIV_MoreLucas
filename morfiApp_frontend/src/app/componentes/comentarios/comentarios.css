@@ -2,3 +2,22 @@
 .comentario { border: 1.5px solid var(--sabor-borde); border-radius: 12px; background: #fff; }
 /* Respeta los saltos de línea */
 .texto { white-space: pre-line; color: var(--sabor-marron-suave); }
+
+/* Contenedor de las acciones del comentario: botones en fila con separación */
+.acciones-comentario { display: flex; gap: 0.5rem; margin-top: 0.6rem; }
+
+/* Botoncito en píldora, discreto: borde fino, letra chica y semi-negrita */
+.accion-comentario {
+  background: transparent; border: 1px solid var(--sabor-borde); color: var(--sabor-marron);
+  border-radius: 999px; padding: 0.2rem 0.85rem; font-size: 0.8rem; font-weight: 600;
+  cursor: pointer; transition: background .15s, color .15s, border-color .15s;
+}
+.accion-comentario:hover { background: var(--sabor-marron); border-color: var(--sabor-marron); color: #fff; }
+
+/* Guardar: verde, para destacar la acción principal */
+.accion-comentario.principal { background: var(--sabor-verde); border-color: var(--sabor-verde); color: #fff; }
+.accion-comentario.principal:hover { filter: brightness(0.9); }
+
+/* Eliminar: rojo apagado para que se note que es destructivo */
+.accion-comentario.peligro { color: #b3392f; border-color: #e8c4bf; }
+.accion-comentario.peligro:hover { background: #b3392f; border-color: #b3392f; color: #fff; }

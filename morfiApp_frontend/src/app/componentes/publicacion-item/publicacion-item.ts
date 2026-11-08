@@ -41,6 +41,8 @@ export class PublicacionItem implements OnInit {
 
   // comparo el id del usuario logueado con el del autor
   esMia = computed(() => this.auth.usuario()?._id === this.publicacion().usuario._id);
+  // El boton Eliminar aparece si la publi es mia O si soy administrador
+  puedeEliminar = computed(() => this.esMia() || this.auth.usuario()?.perfil === 'administrador');
 
   // Se ejecuta una vez cuando el componente ya recibio su publi
   ngOnInit() {

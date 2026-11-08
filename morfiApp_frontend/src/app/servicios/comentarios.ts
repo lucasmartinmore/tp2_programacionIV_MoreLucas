@@ -28,4 +28,9 @@ export class ComentariosService {
   modificar(publicacionId: string, comentarioId: string, mensaje: string) {
     return this.http.put<Comentario>(`${this.url(publicacionId)}/${comentarioId}`, { mensaje });
   }
+
+  // DELETE: elimina un comentario (el back verifica que sea el autor o un admin)
+  eliminar(publicacionId: string, comentarioId: string) {
+  return this.http.delete<void>(`${this.url(publicacionId)}/${comentarioId}`);
+  }
 }

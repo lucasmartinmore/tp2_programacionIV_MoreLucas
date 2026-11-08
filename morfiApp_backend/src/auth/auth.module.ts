@@ -18,7 +18,7 @@ import { AuthGuard } from './auth.guard.js';
       // funcion que devuelve la configuracion; se ejecuta al arrancar
       useFactory: () => ({
         secret: process.env.JWT_SECRET,
-        // El token vence a los 40segund
+        // El token vence al minuto
         signOptions: { expiresIn: '1m' },
       }),
     }),

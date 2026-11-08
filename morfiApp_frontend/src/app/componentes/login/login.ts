@@ -39,14 +39,15 @@ export class Login {
     private router: Router,
   ) {}
 
-  // Devuelve el mensaje de error de un campo, o null si está bien o aún no lo tocó el usuario
+  // Devuelve el mensaje de error de un campo
+  //  o null si esta bien o no lo toco el usuario
   mensaje(campo: string): string | null {
     const c = this.form.get(campo);
-    // touched = el usuario ya entró y salió del campo; así no mostramos errores antes de tiempo
+    // touched = el usuario entro y salio del campo; asi no muestro errores antes de tiempo
     if (!c || !c.touched || !c.errors) return null;
     // Falta completar el campo
     if (c.hasError('required')) return 'Este campo es obligatorio';
-    // No cumple la expresión regular de la contraseña
+    // No cumple la expresion regular de la contra
     if (c.hasError('pattern')) return 'Mínimo 8 caracteres, una mayúscula y un número';
     // Cualquier otro error
     return 'Valor inválido';
@@ -54,7 +55,7 @@ export class Login {
 
   // Se ejecuta al enviar el formulario ---> "Ingresar")
   enviar() {
-    // Si hay errores: los marcamos todos como seleccionados para que se vean los mensajes y no seguimos
+    // Si hay errores: los marco todos como seleccionados para que se vean los mensajes y no seguimos
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -63,16 +64,17 @@ export class Login {
     // getRawValue() devuelve un objeto con el valor de cada campo; lo desarmamos en dos variables
     const { identificador, password } = this.form.getRawValue();
 
-    // Avisamos que empezó el envío (deshabilita el botón)
+    // Aviso que empezo el envio (deshabilita el boton)
     this.enviando.set(true);
 
-    // .subscribe = "ejecutá la petición y avisame qué pasó": next = respondió bien; error = respondió con error
+    // .subscribe = "ejecuta la peticion y avisa q paso"
+    //  next = respondio bien; error = respondio con error
     this.auth.login(identificador ?? '', password ?? '').subscribe({
-      // Respuesta correcta (200): usuario es lo que devolvió el back
+      // Respuesta correcta (200): usuario es lo que devolvio el back
       next: (usuario) => {
-        // Terminó el envío
+        // Termino el envío
         this.enviando.set(false);
-        // Modal de éxito; al tocar "Aceptar" se ejecuta la función y navegamos a Publicaciones
+        // Modal de exito; al tocar "Aceptar" se ejecuta la función y navegamos a Publicaciones
         this.modal.mostrar('exito', `¡Hola, ${usuario.nombre}!`, 'Ingresaste correctamente.', () =>
           this.router.navigate(['/publicaciones']),
         );
@@ -81,8 +83,10 @@ export class Login {
       error: (err: HttpErrorResponse) => {
         // Termino el envío
         this.enviando.set(false);
-        // Modal de error con título y mensajes segun el código de estado
-        this.modal.mostrar('error', tituloDeError(err.status), mensajesDeError(err));
+        // 403 en el login = cuenta deshabilitada
+        // titulo propio para que se entienda
+        const titulo = err.status === 403 ? 'Cuenta deshabilitada' : tituloDeError(err.status);
+        this.modal.mostrar('error', titulo, mensajesDeError(err));
       },
     });
   }

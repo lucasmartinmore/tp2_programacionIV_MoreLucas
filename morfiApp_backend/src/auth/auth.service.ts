@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';// UnauthorizedException: error que Nest convierte en respuesta 401.
+import { Injectable, UnauthorizedException, ForbiddenException } from '@nestjs/common';// UnauthorizedException: error que Nest convierte en respuesta 401.
 import { PasswordHasher } from '@nestjs/authentication';// Tiene hash() (convertir contraseña en hash) y verify() (comprobarla).
 import { JwtService } from '@nestjs/jwt';// JwtService: herramienta para firmar (crear) tokens
 import { UsuariosService } from '../usuarios/usuarios.service.js';// UsuariosService: la lógica de usuarios (verificar, crear, buscar).
@@ -54,6 +54,11 @@ export class AuthService {
     const coincide = await this.passwordHasher.verify(dto.password, usuario.password);
     // Si no coincide, lanzamos el mismo 401.
     if (!coincide) throw error;
+    // La contraseña es correcta pero la cuenta fue deshabilitada por un administrador
+    // (lo comprobamos despues de la contra para no revelar el estado de cuentas)
+    if (!usuario.activo) {
+      throw new ForbiddenException('Tu cuenta está deshabilitada. Contactá a un administrador.');
+    }
 
     // Finalizo todo ok. Devuelvo todos los datos del usuario (sin contraseña) y token. Nest responde 200 OK.
     return { usuario: this.sinPassword(usuario), token: await this.generarToken(usuario) };
@@ -70,7 +75,7 @@ export class AuthService {
     return this.sinPassword(usuario);
   }
 
-  // Devuelvo un token nuevo con la misma payload y otros 15''
+  // Devuelvo un token nuevo con la misma payload y otros 40''
   async refrescar(payload: PayloadJwt) {
     // Compruebo que el usuario siga existiendo y habilitado (si no, lanza 401)
     await this.autorizar(payload.sub);

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, computed} from '@angular/core';
 import { DatePipe } from '@angular/common';
 // ActivatedRoute = para leer el ":id" de la URL; RouterLink = link "Volver"
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -9,6 +9,7 @@ import { mensajesDeError, tituloDeError } from '../../utils/errores';
 import { Publicacion } from '../../models/publicacion';
 // El componente hijo con los comentarios
 import { Comentarios } from '../comentarios/comentarios';
+import { Auth } from '../../servicios/auth';
 
 @Component({
   imports: [DatePipe, RouterLink, Comentarios],
@@ -22,9 +23,30 @@ export class PublicacionDetalle implements OnInit {
   private router = inject(Router);
   private service = inject(PublicacionesService);
   private modal = inject(ModalService);
+  protected auth = inject(Auth);
 
   // La publi (null mientras carga)
   publicacion = signal<Publicacion | null>(null);
+
+  // Puedo eliminar si soy el autor o administrador
+  puedeEliminar = computed(() => {
+    const p = this.publicacion();
+    const u = this.auth.usuario();
+    return !!p && !!u && (p.usuario._id === u._id || u.perfil === 'administrador');
+  });
+
+  // Confirmacio con el modal y baja
+  // al terminar, vuelvo al listado
+  eliminar() {
+    const p = this.publicacion();
+    if (!p) return;
+    this.modal.confirmar('Eliminar publicación', '¿Seguro que querés eliminar esta publicación?', () => {
+      this.service.eliminar(p._id).subscribe({
+        next: () => this.router.navigate(['/publicaciones']),
+        error: (err: HttpErrorResponse) => this.modal.mostrar('error', tituloDeError(err.status), mensajesDeError(err)),
+      });
+    });
+  }
 
   ngOnInit() {
     // snapshot.paramMap.get('id') lee el pedazo ":id" de /publicaciones/:id

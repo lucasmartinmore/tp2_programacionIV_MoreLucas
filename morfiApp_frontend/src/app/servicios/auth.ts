@@ -89,6 +89,11 @@ export class Auth {
     this.usuario.set(null);
   }
 
+  // Actualiza el usuario guardado (despues de editar el perfil)
+  actualizarUsuario(usuario: Usuario) {
+  this.guardarUsuario(usuario);
+  }
+
   // Guarda token y usuario 
   // arranca el contador
   private guardarSesion(r: RespuestaAuth) {

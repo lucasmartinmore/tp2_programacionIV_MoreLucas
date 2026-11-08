@@ -1,5 +1,11 @@
-/* Banner con fondo arena liso: las formas ahora las pone la ilustración */
-.hero { padding: 4rem 0; background: var(--sabor-arena); overflow: hidden; }
+/* Banner con degradé arena a durazno; las manchas de color se dibujan con ::before y ::after */
+.hero { position: relative; padding: 4rem 0; background: linear-gradient(135deg, var(--sabor-arena) 0%, #fdebd3 100%); overflow: hidden; }
+/* Mancha naranja arriba a la derecha */
+.hero::before { content: ''; position: absolute; width: 420px; height: 420px; right: -120px; top: -170px; border-radius: 50%; background: radial-gradient(circle, rgba(244, 162, 52, 0.35), transparent 70%); }
+/* Mancha verde abajo a la izquierda */
+.hero::after { content: ''; position: absolute; width: 320px; height: 320px; left: -110px; bottom: -170px; border-radius: 50%; background: radial-gradient(circle, rgba(47, 107, 79, 0.2), transparent 70%); }
+/* El contenido queda por encima de las manchas */
+.hero > .container { position: relative; z-index: 1; }
 /* Etiqueta chiquita en mayúsculas y verde */
 .hero-etiqueta { text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.8rem; font-weight: 700; color: var(--sabor-verde); margin-bottom: 0.75rem; }
 /* Título enorme y compacto, con ancho máximo para que no se estire */

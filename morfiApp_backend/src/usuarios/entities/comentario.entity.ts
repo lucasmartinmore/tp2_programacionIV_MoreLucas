@@ -19,6 +19,10 @@ export class Comentario {
   // pasa a true cuando se edita 
   @Prop({ default: false })
   modificado: boolean;
+
+  // true = visible; false = eliminado (baja logica)
+  @Prop({ default: true, index: true })
+  activo: boolean;
 }
 
 // Mongoose genera el esquema a partir de la clase

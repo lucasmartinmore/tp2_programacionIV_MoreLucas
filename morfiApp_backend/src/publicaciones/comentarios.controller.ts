@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query, Req, UseGuards, HttpStatus, Delete, HttpCode } from '@nestjs/common';
 import { ComentariosService } from './comentarios.service.js';
 import { ComentarioDto } from './dto/comentario.dto.js';
 import { ListarComentariosDto } from './dto/listar-comentarios.dto.js';
@@ -33,5 +33,17 @@ export class ComentariosController {
     @Body() dto: ComentarioDto,
   ) {
     return this.comentariosService.modificar(publicacionId, comentarioId, req.user.sub, dto);
+  }
+
+  // DELETE /publicaciones/:publicacionId/comentarios/:comentarioId
+  @Delete(':comentarioId')
+  @HttpCode(HttpStatus.NO_CONTENT) // 204: se eliminO y no hay nada que devolver
+  eliminar(
+    @Param('publicacionId') publicacionId: string,
+    @Param('comentarioId') comentarioId: string,
+    @Req() req: RequestConUsuario,
+  ) {
+    // pasO todo el payload del token: el service necesita el id y el rol
+    return this.comentariosService.eliminar(publicacionId, comentarioId, req.user);
   }
 }

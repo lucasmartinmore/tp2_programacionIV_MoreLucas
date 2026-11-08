@@ -1,0 +1,14 @@
+/* Ocupa casi toda la pantalla y centra todo */
+.pantalla-carga { min-height: 75vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; animation: aparecer 0.4s ease; }
+/* El logo "late" suavemente */
+.logo { color: var(--sabor-naranja); animation: latir 1.4s ease-in-out infinite; }
+/* Nombre en el verde de la app */
+.nombre { font-family: 'Poppins', sans-serif; font-weight: 700; color: var(--sabor-verde); margin: 0; }
+/* Spinner grande y del color del logo */
+.spinner { width: 3rem; height: 3rem; color: var(--sabor-naranja); }
+/* Texto chico y suave */
+.texto { color: var(--sabor-marron-suave); margin: 0; }
+/* Animacion: el logo crece y vuelve a su tamaño */
+@keyframes latir { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+/* Animación: la pantalla aparece de a poco */
+@keyframes aparecer { from { opacity: 0; } to { opacity: 1; } }

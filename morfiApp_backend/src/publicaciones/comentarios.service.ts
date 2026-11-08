@@ -5,9 +5,13 @@ import { Comentario } from '../usuarios/entities/comentario.entity.js';
 import { Publicacion } from './entities/publicacion.entity.js';
 import { ComentarioDto } from './dto/comentario.dto.js';
 import { ListarComentariosDto } from './dto/listar-comentarios.dto.js';
+import type { PayloadJwt } from '../auth/auth.types.js'; // NUEVO: para saber quién pide y si es administrador
 
 // Datos del autor que muestro junto a cada comentario
 const CAMPOS_AUTOR = 'nombre apellido username imagenPerfilUrl';
+//"no eliminado". Uso $ne:false y no "true" porque
+// los comentarios viejos no tienen el campo "activo"
+const VISIBLE = { $ne: false };
 
 @Injectable()
 export class ComentariosService {
@@ -63,6 +67,28 @@ export class ComentariosService {
     comentario.modificado = true;
     await comentario.save();
     return this.comentarioModel.findById(comentarioId).populate('usuario', CAMPOS_AUTOR).lean().exec();
+  }
+
+  // DELETE: baja logica. 
+  // Puede el autor del comentario o un administrador
+  async eliminar(publicacionId: string, comentarioId: string, usuario: PayloadJwt) {
+    await this.verificarPublicacion(publicacionId);
+    if (!isValidObjectId(comentarioId)) throw new NotFoundException('Comentario no encontrado');
+    // Debe existir, ser de esa publi y no estar ya eliminado
+    const comentario = await this.comentarioModel
+      .findOne({ _id: comentarioId, publicacion: publicacionId, activo: VISIBLE })
+      .exec();
+    if (!comentario) throw new NotFoundException('Comentario no encontrado');
+    // es autor o admin? el rol viene dentro del token
+    const esAutor = comentario.usuario.toString() === usuario.sub;
+    const esAdmin = usuario.perfil === 'administrador';
+    // Si no es ninguno de los dos: 403 (no tenes permiso)
+    if (!esAutor && !esAdmin) {
+      throw new ForbiddenException('Solo el autor o un administrador pueden eliminar este comentario');
+    }
+    // Baja logica
+    comentario.activo = false;
+    await comentario.save();
   }
 
   // Lanza 404 si la publi no existe, esta dado de baja o el id mal formateado

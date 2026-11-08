@@ -31,14 +31,23 @@
       <!-- Si este comentario se está editando: textarea + botones; si no: el texto -->
       @if (editandoId() === c._id) {
         <textarea class="form-control my-2" rows="2" maxlength="500" [formControl]="edicion"></textarea>
-        <button type="button" class="btn btn-primary btn-sm me-2" (click)="guardar(c)">Guardar</button>
-        <button type="button" class="btn btn-outline-secondary btn-sm" (click)="cancelar()">Cancelar</button>
+        <!-- acciones-comentario: contenedor que separa los botones; accion-comentario: estilo de píldora -->
+        <div class="acciones-comentario">
+          <button type="button" class="accion-comentario principal" (click)="guardar(c)">Guardar</button>
+          <button type="button" class="accion-comentario" (click)="cancelar()">Cancelar</button>
+        </div>
       } @else {
         <p class="mb-1 mt-2 texto">{{ c.mensaje }}</p>
         <!-- Solo el autor ve "Editar" -->
-        @if (esMio(c)) {
-          <button type="button" class="btn btn-link btn-sm p-0" (click)="editar(c)">Editar</button>
-        }
+        <!-- Editar solo si es mío; Eliminar si es mío o soy administrador -->
+        <div class="acciones-comentario">
+          @if (esMio(c)) {
+            <button type="button" class="accion-comentario" (click)="editar(c)">Editar</button>
+          }
+          @if (puedeEliminar(c)) {
+            <button type="button" class="accion-comentario peligro" (click)="eliminar(c)">Eliminar</button>
+          }
+        </div>
       }
     </article>
   } @empty {

@@ -17,6 +17,9 @@ import { Comentario } from '../../models/comentario';
 export class Comentarios implements OnInit {
   // input.required = el padre DEBE pasarme el id de la publi
   publicacionId = input.required<string>();
+  // soy admin (computed: se recalcula solo si cambia el usuario)
+  esAdmin = computed(() => this.auth.usuario()?.perfil === 'administrador');
+
 
   protected auth = inject(Auth);
   private service = inject(ComentariosService);
@@ -89,6 +92,25 @@ export class Comentarios implements OnInit {
   // Sale del modo edición sin guardar
   cancelar() {
     this.editandoId.set(null);
+  }
+
+  // ¿Puedo borrar este comentario? Mío o soy administrador
+  puedeEliminar(c: Comentario) {
+    return this.esMio(c) || this.esAdmin();
+  }
+
+  // Pide confirmación con el modal y, si acepta, elimina
+  eliminar(c: Comentario) {
+    this.modal.confirmar('Eliminar comentario', '¿Seguro que querés eliminar este comentario?', () => {
+      this.service.eliminar(this.publicacionId(), c._id).subscribe({
+        next: () => {
+          // Lo sacamos de la lista y bajamos el total
+          this.comentarios.update((lista) => lista.filter((x) => x._id !== c._id));
+          this.total.update((t) => t - 1);
+        },
+        error: (err: HttpErrorResponse) => this.fallo(err),
+      });
+    });
   }
 
   // Guarda la edicion (PUT)

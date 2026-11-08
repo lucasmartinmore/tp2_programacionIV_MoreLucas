@@ -1,0 +1,38 @@
+<div class="container py-4">
+  <h1 class="h3 mb-3">Estadísticas</h1>
+
+  <!-- Selector del lapso. #d y #h son referencias al input para leer su valor -->
+  <div class="d-flex flex-wrap align-items-end gap-3 mb-4">
+    <div>
+      <label class="form-label mb-1">Desde</label>
+      <input #d type="date" class="form-control" [value]="desde()" (change)="desde.set(d.value)" />
+    </div>
+    <div>
+      <label class="form-label mb-1">Hasta</label>
+      <input #h type="date" class="form-control" [value]="hasta()" (change)="hasta.set(h.value)" />
+    </div>
+    <button type="button" class="btn btn-primary" (click)="actualizar()">Actualizar</button>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-6">
+      <div class="card tarjeta"><div class="card-body">
+        <h2 class="h6">Publicaciones por usuario</h2>
+        <!-- #lienzoUsuarios es el nombre con el que el TS encuentra este canvas -->
+        <canvas #lienzoUsuarios></canvas>
+      </div></div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card tarjeta"><div class="card-body">
+        <h2 class="h6">Comentarios por día (total: {{ totalComentarios() }})</h2>
+        <canvas #lienzoDias></canvas>
+      </div></div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card tarjeta"><div class="card-body">
+        <h2 class="h6">Comentarios por publicación (las 10 con más)</h2>
+        <canvas #lienzoPublicaciones></canvas>
+      </div></div>
+    </div>
+  </div>
+</div>

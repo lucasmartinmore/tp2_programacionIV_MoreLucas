@@ -24,7 +24,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   //  y miro si vuelve con error
   return next(peticion).pipe(
     catchError((err: HttpErrorResponse) => {
-      if (err.status === 401 && !req.url.endsWith('/auth/login')) {// 401 en cualquier ruta MENOS login
+      if (err.status === 401 && !req.url.endsWith('/auth/login') && !req.url.endsWith('/auth/autorizar')) {// 401 en cualquier ruta MENOS login
         // habia sesion? (para avisar solo en ese caso)
         const habiaSesion = auth.usuario() !== null;
         // Limpiamos todo y mando al login para rehacer el token 

@@ -15,8 +15,8 @@
       <!-- &#64; es el símbolo @ (en Angular un @ suelto es un bloque de control). Pipe date = formato de fecha -->
       <small class="text-muted">&#64;{{ publicacion().usuario.username }} · {{ publicacion().createdAt | date: 'dd/MM/yyyy HH:mm' }}</small>
     </div>
-    <!-- Botón eliminar: solo aparece si la publicación es mía -->
-    @if (esMia()) {
+    <!-- Botón eliminar: solo aparece si la publicación es mía o soy administrador -->
+    @if (puedeEliminar()) {
       <button type="button" class="btn btn-outline-secondary btn-sm" (click)="pedirConfirmacion()">Eliminar</button>
     }
   </div>

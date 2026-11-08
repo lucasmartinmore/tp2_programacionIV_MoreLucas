@@ -14,7 +14,7 @@
   --bs-navbar-active-color: var(--sabor-verde);
 }
 
-/* Nombre de la app: fuente de títulos, grande y naranja */
+/* Nombre de la app: fuente de títulos, grande y verde */
 .navbar-brand { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.5rem; letter-spacing: -0.03em; color: var(--sabor-verde) !important; display: inline-flex; align-items: center; gap: 0.5rem; }
 /* Detalle de marca: un círculo naranja con otro amarillo adentro */
 .navbar-brand::before { content: ''; width: 18px; height: 18px; border-radius: 50%; background: var(--sabor-naranja); box-shadow: inset 0 0 0 5px var(--sabor-miel); }
@@ -26,7 +26,22 @@
 /* La barrita amarilla debajo del link activo */
 .nav-link.active::after { content: ''; position: absolute; left: 0.9rem; right: 0.9rem; bottom: 0; height: 3px; border-radius: 2px; background: var(--sabor-miel); }
 
-/* Botón "Salir": en una barra blanca el borde claro no se vería, así que lo hacemos marrón en píldora */
-.navbar-sabores .btn-outline-light { border: 1.5px solid var(--sabor-marron); color: var(--sabor-marron); border-radius: 999px; font-weight: 700; padding: 0.35rem 1rem; }
-/* Al pasar el mouse se rellena de marrón */
-.navbar-sabores .btn-outline-light:hover { background: var(--sabor-marron); color: #fff; }
+/* Botón de cerrar sesión: círculo con borde marrón y el ícono adentro */
+.btn-salir {
+  width: 40px; height: 40px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+  background: transparent; border: 1.5px solid var(--sabor-marron); color: var(--sabor-marron);
+  cursor: pointer; transition: background .15s, color .15s;
+}
+.btn-salir:hover { background: var(--sabor-marron); color: #fff; }
+
+/* Hamburguesa (solo se ve en celular): la de navbar-dark es blanca y no se vería, la hacemos marrón */
+.navbar-morfi .navbar-toggler { border-color: var(--sabor-marron); }
+.navbar-morfi .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%235a3a22' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* En celular el menú desplegado: links con un poco de aire y la barrita amarilla más corta */
+@media (max-width: 767.98px) {
+  .navbar-morfi .navbar-nav { padding-top: 0.75rem; }
+  .nav-link.active::after { left: 0.9rem; right: auto; width: 2rem; }
+}

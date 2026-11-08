@@ -1,0 +1,35 @@
+<div class="container py-4" style="max-width: 640px">
+  <div class="card tarjeta">
+    <div class="card-body p-4">
+      <h1 class="h4 mb-3">Editar perfil</h1>
+      <!-- [formGroup] conecta el formulario; (ngSubmit) funciona porque tiene [formGroup] -->
+      <form [formGroup]="form" (ngSubmit)="guardar()">
+        <div class="mb-3">
+          <label class="form-label">Nombre</label>
+          <input class="form-control" formControlName="nombre" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Apellido</label>
+          <input class="form-control" formControlName="apellido" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Fecha de nacimiento</label>
+          <input type="date" class="form-control" formControlName="fechaNacimiento" />
+          @if (form.get('fechaNacimiento')?.hasError('fechaFutura')) {
+            <small class="text-danger">La fecha no puede ser futura</small>
+          }
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Descripción</label>
+          <textarea class="form-control" rows="3" maxlength="200" formControlName="descripcion"></textarea>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Nueva foto de perfil (opcional)</label>
+          <input type="file" class="form-control" accept="image/png,image/jpeg,image/webp" (change)="alElegirArchivo($event)" />
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="enviando()">Guardar cambios</button>
+        <a routerLink="/mi-perfil" class="btn btn-outline-secondary ms-2">Cancelar</a>
+      </form>
+    </div>
+  </div>
+</div>

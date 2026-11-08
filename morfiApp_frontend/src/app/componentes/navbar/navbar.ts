@@ -7,12 +7,13 @@
  * - ¿Qué hace routerLink? Navega a otra ruta sin recargar la página (es una SPA: Single Page Application).
  * - ¿Y routerLinkActive? Le agrega la clase "active" al link de la pantalla actual.
  */
-import { Component } from '@angular/core';
+import { Component, Inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { Auth } from '../../servicios/auth';// Auth = servicio que sabe quién está logueado
+import { SoloAdminDirective } from '../../directives/solo-admin.directive.js';
 
 @Component({
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, SoloAdminDirective],
   selector: 'app-navbar',
   styleUrl: './navbar.css',
   templateUrl: './navbar.html',
@@ -23,6 +24,9 @@ export class Navbar {
     protected auth: Auth,
     private router: Router,
   ) {}
+
+  // true = el menu de celular esta desplegado
+  menuAbierto = signal(false);  
 
   // Se ejecuta al tocar "Salir": cierra la sesión y lleva al login
   salir() {
