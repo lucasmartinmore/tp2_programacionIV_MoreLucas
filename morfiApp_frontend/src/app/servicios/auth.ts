@@ -16,7 +16,7 @@ interface RespuestaAuth {
 // Claves con las que guardo en localStorage
 const CLAVE_USUARIO = 'usuarioRedSocial';
 const CLAVE_TOKEN = 'tokenRedSocial';
-const AVISO_ANTES_DE_VENCER_MS = 10 * 1000; // 10 segundos
+const AVISO_ANTES_DE_VENCER_MS = 5 * 60 * 1000; // 5' antes
 
 @Service()
 export class Auth {
