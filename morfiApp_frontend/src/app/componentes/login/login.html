@@ -20,12 +20,14 @@
                 formControlName="identificador" -> este input ES el FormControl "identificador" del .ts
                 [class.is-invalid]="mensaje('identificador')" -> si mensaje() devuelve un texto, agrega la clase
                 "is-invalid" de Bootstrap, que pinta el borde de rojo
+                appAutoFoco -> directiva propia: apenas aparece la pantalla, el cursor queda en este campo
               -->
-              <input
+              <input 
                 id="identificador"
                 class="form-control"
                 formControlName="identificador"
                 [class.is-invalid]="mensaje('identificador')"
+                appAutoFoco
               />
               <!-- @if (...; as m) = si hay mensaje de error lo guarda en "m" y lo dibuja; si no, no se dibuja nada -->
               @if (mensaje('identificador'); as m) {

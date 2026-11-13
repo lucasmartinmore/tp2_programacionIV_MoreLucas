@@ -88,6 +88,19 @@ export class UsuariosService {
     return this.sinPassword(usuario);
   }
 
+    // El administrador cambia el perfil de otro usuario (usuario - administrador)
+  async cambiarPerfil(id: string, perfil: 'usuario' | 'administrador', solicitanteId: string) {
+    // No puede cambiarse el perfil a síi mismo:
+    // asi nunca se queda el sistema sin administradores
+    if (id === solicitanteId) {
+      throw new BadRequestException('No podés cambiar tu propio perfil');
+    }
+    if (!isValidObjectId(id)) throw new NotFoundException('Usuario no encontrado');
+    const usuario = await this.usuarioModel.findByIdAndUpdate(id, { perfil }, { new: true }).exec();
+    if (!usuario) throw new NotFoundException('Usuario no encontrado');
+    return this.sinPassword(usuario);
+  }
+
   // El usuario modifica SU perfil (nombre, apellido, descripcion, fecha y foto)
   async actualizarPerfil(id: string, dto: UpdatePerfilDto, imagen?: Express.Multer.File) {
     // Armo solo con lo que vino 

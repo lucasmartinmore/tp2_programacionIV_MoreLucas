@@ -7,10 +7,10 @@
   </div>
 </section>
 
-<!-- Contenido principal -->
+<!-- Contenido principal: columna grande (listado) + columna chica (barra lateral) -->
 <div class="container py-4">
-  <div class="row justify-content-center">
-    <div class="col-lg-8">
+  <div class="row g-4">
+    <div class="col-lg-9">
 
       <!-- Si hay sesión mostramos todo; si no, un aviso para ingresar -->
       @if (auth.usuario()) {
@@ -29,21 +29,26 @@
           </select>
         </div>
 
-        <!-- Listado: un componente app-publicacion-item por cada publicación -->
-        @for (p of publicaciones(); track p._id) {
-          <!-- [publicacion]="p" le pasa los datos al hijo; (eliminada) escucha cuando el hijo avisa que se eliminó -->
-          <app-publicacion-item [publicacion]="p" (eliminada)="alEliminarse()" />
-        } @empty {
-          <!-- @empty se muestra cuando la lista está vacía -->
-          @if (!cargando()) {
-            <div class="card tarjeta text-center">
-              <div class="card-body p-4">Todavía no hay publicaciones. ¡Sé la primera persona en publicar!</div>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xxl-3 g-4">
+          @for (p of publicaciones(); track p._id) {
+            <!-- Cada publicación va en su columna. [publicacion]="p" le pasa los datos al hijo; (eliminada) escucha cuando el hijo avisa que se eliminó -->
+            <div class="col">
+              <app-publicacion-item [publicacion]="p" (eliminada)="alEliminarse()" />
             </div>
+          } @empty {
+            <!-- @empty se muestra cuando la lista está vacía -->
+            @if (!cargando()) {
+              <div class="col-12">
+                <div class="card tarjeta text-center">
+                  <div class="card-body p-4">Todavía no hay publicaciones. ¡Sé la primera persona en publicar!</div>
+                </div>
+              </div>
+            }
           }
-        }
+        </div>
 
         <!-- Paginación: anterior / página X de Y / siguiente -->
-        <div class="d-flex justify-content-between align-items-center mt-3">
+        <div class="d-flex justify-content-between align-items-center mt-4">
           <!-- disabled si estamos en la primera página -->
           <button type="button" class="btn btn-outline-secondary" [disabled]="paginaActual() === 1 || cargando()" (click)="anterior()">Anterior</button>
           <!-- Indicador de página -->
@@ -63,5 +68,10 @@
       }
 
     </div>
+
+    <!-- Barra lateral: d-none d-lg-block = solo se ve en pantallas grandes -->
+    <aside class="col-lg-3 d-none d-lg-block">
+      <app-barra-lateral />
+    </aside>
   </div>
 </div>

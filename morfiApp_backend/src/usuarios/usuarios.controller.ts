@@ -5,6 +5,7 @@ import { CrearUsuarioAdminDto } from './dto/create-usuario-admin.dto.js';
 import { AuthGuard } from '../auth/auth.guard.js';
 import { AdminGuard } from '../auth/admin.guard.js';
 import type { RequestConUsuario } from '../auth/auth.types.js';
+import { CambiarPerfilDto } from './dto/cambiar-perfil.dto.js';
 
 import {
   Body, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpStatus, MaxFileSizeValidator,
@@ -68,5 +69,13 @@ export class UsuariosController {
   @HttpCode(HttpStatus.OK)
   habilitar(@Param('id') id: string, @Req() req: RequestConUsuario) {
     return this.usuariosService.cambiarEstado(id, true, req.user.sub);
+  }
+
+  // PUT /usuarios/:id/perfil → cambia el perfil de otro usuario (solo administrador)
+  @UseGuards(AdminGuard)
+  @Put(':id/perfil')
+  @HttpCode(HttpStatus.OK)
+  cambiarPerfil(@Param('id') id: string, @Body() dto: CambiarPerfilDto, @Req() req: RequestConUsuario) {
+    return this.usuariosService.cambiarPerfil(id, dto.perfil, req.user.sub);
   }
 }

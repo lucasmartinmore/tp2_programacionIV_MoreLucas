@@ -1,0 +1,5 @@
+/* Buscador: ancho máximo para que no ocupe toda la fila */
+.buscador { max-width: 340px; border-radius: 999px; }
+/* Los dos botones de cada fila, uno al lado del otro y sin cortarse */
+.acciones { white-space: nowrap; }
+.acciones .btn + .btn { margin-left: 0.4rem; }

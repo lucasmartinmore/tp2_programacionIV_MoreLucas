@@ -1,11 +1,37 @@
+:host {
+  display: block;
+}
 /* Foto del autor */
 .avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--sabor-verde); flex-shrink: 0; }
 /* Sin foto: círculo verde con la inicial  */
-.sin-foto { display: inline-flex; align-items: center; justify-content: center; background: var(--sabor-verde); color: #fff; font-family: 'Poppins', sans-serif; font-weight: 700; border: 0; }
-/* Imagen de la receta: ocupa todo el ancho */
-.imagen-publicacion { width: 100%; max-height: 380px; object-fit: cover; display: block; }
-/* El mensaje conserva los saltos*/
-.mensaje { white-space: pre-line; color: var(--sabor-marron-suave); }
+.sin-foto { display: inline-flex; align-items: center; justify-content: center; background: var(--sabor-verde); color: #fff; font-family: 'Poppins', sans-serif; font-weight: 700; border: 0; font-size: 0.95rem }
+
+/* Encabezado compacto: padding propio (no es un card-body, para que no estire) */
+.encabezado { padding: 0.85rem 1rem; }
+/* min-width: 0 = permite que el texto se achique y se corte con "..." en lugar de empujar el botón fuera de la tarjeta */
+.autor { min-width: 0; }
+/* Nombre y fecha en UNA sola línea, con "..." si no entran */
+.nombre, .usuario, .fecha { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nombre { font-weight: 700; line-height: 1.25; }
+.usuario, .fecha { font-size: 0.8rem; line-height: 1.25; }
+
+/* Botón eliminar: círculo chico con la papelera */
+.btn-eliminar { flex-shrink: 0; width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; background: transparent; border: 1.5px solid var(--sabor-borde); color: var(--sabor-marron-suave); border-radius: 50%; transition: all 0.15s ease; }
+.btn-eliminar:hover { border-color: #b3392f; background: #b3392f; color: #fff; }
+
+/* Zona de la foto: MISMA altura con o sin imagen, así todas las tarjetas quedan parejas */
+.imagen-publicacion { width: 100%; height: 200px; object-fit: cover; display: block; }
+/* Sin imagen: recuadro con degradé arena y el tenedor y la cuchara en tono suave */
+.sin-imagen { width: 100%; height: 200px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--sabor-arena) 0%, #fdebd3 100%); color: var(--sabor-marron); }
+.sin-imagen svg { opacity: 0.3; }
+
+/* Título: máximo 2 líneas, el resto se corta con "..." */
+.titulo { line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+/* El mensaje conserva los saltos de línea, pero se corta a 3 líneas */
+.mensaje { white-space: pre-line; color: var(--sabor-marron-suave); display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+/* El pie no se estira: el espacio sobrante lo toma el cuerpo, y el pie queda siempre abajo */
+.pie { flex: 0 0 auto; }
+
 /* Botón de me gusta */
 .btn-megusta { display: inline-flex; align-items: center; gap: 0.5rem; background: transparent; border: 1.5px solid var(--sabor-borde); color: var(--sabor-marron-suave); border-radius: 999px; padding: 0.35rem 1rem; font-weight: 700; transition: all 0.15s ease; }
 /* Al pasar el mouse */

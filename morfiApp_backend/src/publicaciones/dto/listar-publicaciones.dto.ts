@@ -28,6 +28,6 @@ export class ListarPublicacionesDto {
   @Type(() => Number)
   @IsInt({ message: 'limit debe ser un número entero' })
   @Min(1, { message: 'limit debe ser al menos 1' })
-  @Max(10, { message: 'limit no puede superar 50' })
+  @Max(10, { message: 'limit no puede superar 10' })
   limit?: number;
 }

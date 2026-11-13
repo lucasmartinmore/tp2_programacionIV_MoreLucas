@@ -1,15 +1,18 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnInit, computed, inject, signal, viewChild } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Auth } from '../../servicios/auth';
 import { UsuariosService } from '../../servicios/usuarios';
 import { ModalService } from '../../servicios/modal';
 import { mensajesDeError, tituloDeError } from '../../utils/errores';
-import { PATRON_PASSWORD, clavesCoincidenValidator, fechaNoFuturaValidator } from '../../validators/usuario.validators';
 import { Usuario } from '../../models/usuario';
+import { ResaltarDirective } from '../../directives/resaltar.directive';
+import { FormularioUsuario } from '../formulario-usuario/formulario-usuario';
+
+// Los tres filtros posibles de la lista
+type Filtro = 'todos' | 'activos' | 'inactivos';
 
 @Component({
-  imports: [ReactiveFormsModule],
+  imports: [FormularioUsuario, ResaltarDirective],
   selector: 'app-dashboard-usuarios',
   styleUrl: './dashboard-usuarios.css',
   templateUrl: './dashboard-usuarios.html',
@@ -19,39 +22,40 @@ export class DashboardUsuarios implements OnInit {
   private modal = inject(ModalService);
   protected auth = inject(Auth);
 
+  // Ref al form compartido 
+  // (para limpiarlo despues de crear un usuario)
+  private formulario = viewChild(FormularioUsuario);
+
   // Lista de usuarios y estados de carga
   usuarios = signal<Usuario[]>([]);
   cargando = signal(false);
   enviando = signal(false);
-  // Foto opcional del usuario nuevo
-  archivo: File | null = null;
 
-  // La contraseña va en una variable aparte porque "repetir contraseña" 
-  // necesita compararse con ella (igual que en el registro)
-  controlPassword = new FormControl('', [Validators.required, Validators.pattern(PATRON_PASSWORD)]);
+  // Texto del buscador y filtro de estado elegido
+  busqueda = signal('');
+  filtro = signal<Filtro>('todos');
 
-  // Formulario de alta:
-  // mismos datos que el registro 
-  form = new FormGroup({
-    nombre: new FormControl('', [Validators.required]),
-    apellido: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    username: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]),
-    password: this.controlPassword,
-    // Validator propio: compara con la contraseña
-    repetirPassword: new FormControl('', [Validators.required, clavesCoincidenValidator(this.controlPassword)]),
-    fechaNacimiento: new FormControl('', [Validators.required, fechaNoFuturaValidator()]),
-    descripcion: new FormControl('', [Validators.maxLength(200)]),
-    // nonNullable: al hacer reset() vuelve a 'usuario' y nunca queda null
-    perfil: new FormControl<'usuario' | 'administrador'>('usuario', { nonNullable: true }),
+  // Lista que realmente se muestra
+  // aplica el filtro de estado y la busqueda 
+  // (computed: se recalcula sola si cambia algo)
+  visibles = computed(() => {
+    const texto = this.busqueda().trim().toLowerCase();
+    const estado = this.filtro();
+    return this.usuarios().filter((u) => {
+      if (estado === 'activos' && !u.activo) return false;
+      if (estado === 'inactivos' && u.activo) return false;
+      if (!texto) return true;
+      // Buscamos en nombre, apellido, usuario y correo a la vez
+      return `${u.nombre} ${u.apellido} ${u.username} ${u.email}`.toLowerCase().includes(texto);
+    });
   });
+  // Contadores para los botones del filtro
+  cantActivos = computed(() => this.usuarios().filter((u) => u.activo).length);
+  cantInactivos = computed(() => this.usuarios().filter((u) => !u.activo).length);
 
   // Al abrir la pantalla, traigo la lista
   ngOnInit() {
     this.cargar();
-    // Si cambia la contraseña DESPUES de repetirla
-    // hay que volver a comprobar que coincidan
-    this.controlPassword.valueChanges.subscribe(() => this.form.controls.repetirPassword.updateValueAndValidity());
   }
 
   cargar() {
@@ -68,20 +72,8 @@ export class DashboardUsuarios implements OnInit {
     });
   }
 
-  // Mensaje de error de un campo de contraseña 
-  // (null si esta bien o todavia no lo toco)
-  mensaje(campo: string): string | null {
-    const c = this.form.get(campo);
-    if (!c || !c.touched || !c.errors) return null;
-    if (c.hasError('required')) return 'Este campo es obligatorio';
-    if (c.hasError('pattern')) return 'Mínimo 8 caracteres, una mayúscula y un número';
-    // Error de mi validator propio: claves distintas
-    if (c.hasError('losControlesNoCoinciden')) return 'Las contraseñas no coinciden';
-    return 'Valor inválido';
-  }
-
   // soy yo?
-  //(no me puedo auto deshabilitar)
+  //(no me puedo auto deshabilitar ni cambiar mi propio perfil)
   esYo(u: Usuario) {
     return u._id === this.auth.usuario()?._id;
   }
@@ -98,6 +90,17 @@ export class DashboardUsuarios implements OnInit {
     }
   }
 
+  // Pasa a un usuario de comun a administrador, o al viceversa.
+  // Siempre pide confirmación
+  alternarPerfil(u: Usuario) {
+    const nuevo = u.perfil === 'administrador' ? 'usuario' : 'administrador';
+    const mensaje =
+      nuevo === 'administrador'
+        ? `¿Hacer administrador a @${u.username}? Va a poder gestionar usuarios y ver las estadísticas.`
+        : `¿Quitarle el rol de administrador a @${u.username}?`;
+    this.modal.confirmar('Cambiar perfil', mensaje, () => this.cambiar(this.service.cambiarPerfil(u._id, nuevo)));
+  }
+
   // Ejecuta la peticion y reemplaza esa fila con el usuario actualizado que devuelve el back
   private cambiar(peticion: ReturnType<UsuariosService['habilitar']>) {
     peticion.subscribe({
@@ -107,33 +110,16 @@ export class DashboardUsuarios implements OnInit {
     });
   }
 
-  alElegirArchivo(evento: Event) {
-    this.archivo = (evento.target as HTMLInputElement).files?.[0] ?? null;
-  }
-
-  // Crea un usuario nuevo
-  crear() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-    // Separo repetirPassword del resto: es solo para el front 
-    // y el back rechaza campos desconocidos (400)
-    const { repetirPassword, ...datos } = this.form.getRawValue();
-
-    const formData = new FormData();
-    Object.entries(datos).forEach(([clave, valor]) => formData.append(clave, valor ?? ''));
-    if (this.archivo) formData.append('imagenPerfil', this.archivo);
-
+  // Crea un usuario nuevo. El FormData llega ya validado desde el formulario compartido
+  crear(formData: FormData) {
     this.enviando.set(true);
     this.service.crear(formData).subscribe({
       next: (nuevo) => {
         this.enviando.set(false);
         // Lo pongo arriba de la lista
-        //  y limpioel form
+        //  y limpio el form
         this.usuarios.update((lista) => [nuevo, ...lista]);
-        this.form.reset();
-        this.archivo = null;
+        this.formulario()?.reiniciar();
         this.modal.mostrar('exito', 'Usuario creado', `@${nuevo.username} ya puede ingresar.`);
       },
       error: (err: HttpErrorResponse) => {

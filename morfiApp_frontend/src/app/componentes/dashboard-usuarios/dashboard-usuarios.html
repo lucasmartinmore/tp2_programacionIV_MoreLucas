@@ -1,6 +1,24 @@
 <div class="container py-4">
   <h1 class="h3 mb-4">Usuarios</h1>
 
+  <!-- Barra de la lista: buscador y filtro por estado. #q es una referencia al input para leer lo que se escribe -->
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+    <input #q type="search" class="form-control buscador" placeholder="Buscar por nombre, correo o usuario"
+           [value]="busqueda()" (input)="busqueda.set(q.value)" />
+    <!-- btn-group = botones pegados; [class.active] marca el filtro elegido -->
+    <div class="btn-group" role="group" aria-label="Filtrar por estado">
+      <button type="button" class="btn btn-outline-secondary btn-sm" [class.active]="filtro() === 'todos'" (click)="filtro.set('todos')">
+        Todos ({{ usuarios().length }})
+      </button>
+      <button type="button" class="btn btn-outline-secondary btn-sm" [class.active]="filtro() === 'activos'" (click)="filtro.set('activos')">
+        Habilitados ({{ cantActivos() }})
+      </button>
+      <button type="button" class="btn btn-outline-secondary btn-sm" [class.active]="filtro() === 'inactivos'" (click)="filtro.set('inactivos')">
+        Deshabilitados ({{ cantInactivos() }})
+      </button>
+    </div>
+  </div>
+
   <!-- Lista de usuarios en una tabla (table-responsive evita que se rompa en el celular) -->
   <div class="table-responsive mb-5">
     <table class="table align-middle">
@@ -8,76 +26,47 @@
         <tr><th>Usuario</th><th>Correo</th><th>Perfil</th><th>Estado</th><th></th></tr>
       </thead>
       <tbody>
-        @for (u of usuarios(); track u._id) {
-          <!-- appResaltar: directiva propia que pinta la fila al pasar el mouse (ver bloque D) -->
+        <!-- Recorremos visibles(), que ya tiene aplicados el filtro y la búsqueda -->
+        @for (u of visibles(); track u._id) {
+          <!-- appResaltar: directiva propia que pinta la fila al pasar el mouse -->
           <tr appResaltar>
             <td>{{ u.nombre }} {{ u.apellido }} (&#64;{{ u.username }})</td>
             <td>{{ u.email }}</td>
             <td>{{ u.perfil }}</td>
             <td>{{ u.activo ? 'Habilitado' : 'Deshabilitado' }}</td>
-            <td class="text-end">
-              <!-- A mí mismo no me puedo deshabilitar -->
-              @if (!esYo(u)) {
+            <td class="text-end acciones">
+              <!-- A mí mismo no me puedo deshabilitar ni cambiar el perfil -->
+              @if (esYo(u)) {
+                <span class="text-muted small">Vos</span>
+              } @else {
+                <button type="button" class="btn btn-outline-secondary btn-sm" (click)="alternarPerfil(u)">
+                  {{ u.perfil === 'administrador' ? 'Quitar admin' : 'Hacer admin' }}
+                </button>
                 <button type="button" class="btn btn-outline-secondary btn-sm" (click)="alternar(u)">
                   {{ u.activo ? 'Deshabilitar' : 'Habilitar' }}
                 </button>
               }
             </td>
           </tr>
+        } @empty {
+          <tr><td colspan="5" class="text-center text-muted py-4">No hay usuarios que coincidan con la búsqueda.</td></tr>
         }
       </tbody>
     </table>
   </div>
 
-  <!-- Formulario de alta -->
+  <!-- Formulario de alta: el MISMO componente que usa el registro, con las mismas validaciones.
+       [conPerfil]="true" muestra los radio buttons de perfil (el TP los pide) -->
   <div class="card tarjeta">
     <div class="card-body p-4">
       <h2 class="h5 mb-3">Crear usuario</h2>
-      <form [formGroup]="form" (ngSubmit)="crear()">
-        <div class="row g-3">
-          <div class="col-md-6"><label class="form-label">Nombre</label><input class="form-control" formControlName="nombre" /></div>
-          <div class="col-md-6"><label class="form-label">Apellido</label><input class="form-control" formControlName="apellido" /></div>
-          <div class="col-md-6"><label class="form-label">Correo</label><input type="email" class="form-control" formControlName="email" /></div>
-          <div class="col-md-6"><label class="form-label">Usuario</label><input class="form-control" formControlName="username" /></div>
-          <div class="col-md-6">
-            <label class="form-label">Contraseña</label>
-            <input type="password" class="form-control" formControlName="password" [class.is-invalid]="mensaje('password')" />
-            @if (mensaje('password'); as m) {
-              <div class="invalid-feedback">{{ m }}</div>
-            }
-          </div>
-          <div class="col-md-6">
-            <!-- Igual que contraseña; su error propio es "Las contraseñas no coinciden" -->
-            <label class="form-label">Repetir contraseña</label>
-            <input type="password" class="form-control" formControlName="repetirPassword" [class.is-invalid]="mensaje('repetirPassword')" />
-            @if (mensaje('repetirPassword'); as m) {
-              <div class="invalid-feedback">{{ m }}</div>
-            }
-          </div>
-          <div class="col-12">
-            <label class="form-label">Fecha de nacimiento</label>
-            <input type="date" class="form-control" formControlName="fechaNacimiento" />
-          </div>
-          <div class="col-12"><label class="form-label">Descripción</label><textarea class="form-control" rows="2" maxlength="200" formControlName="descripcion"></textarea></div>
-          <div class="col-12">
-            <label class="form-label">Foto (opcional)</label>
-            <input type="file" class="form-control" accept="image/png,image/jpeg,image/webp" (change)="alElegirArchivo($event)" />
-          </div>
-          <!-- Dos radio buttons: el TP los pide. Mismo formControlName = una sola elección -->
-          <div class="col-12">
-            <label class="form-label d-block">Perfil</label>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" id="perfilUsuario" value="usuario" formControlName="perfil" />
-              <label class="form-check-label" for="perfilUsuario">Usuario</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" id="perfilAdmin" value="administrador" formControlName="perfil" />
-              <label class="form-check-label" for="perfilAdmin">Administrador</label>
-            </div>
-          </div>
-        </div>
-        <button type="submit" class="btn btn-primary mt-3" [disabled]="enviando()">Crear usuario</button>
-      </form>
+      <app-formulario-usuario
+        [conPerfil]="true"
+        [enviando]="enviando()"
+        textoBoton="Crear usuario"
+        textoEnviando="Creando usuario..."
+        (enviado)="crear($event)"
+      />
     </div>
   </div>
 </div>

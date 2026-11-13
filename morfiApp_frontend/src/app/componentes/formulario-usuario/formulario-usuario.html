@@ -1,0 +1,117 @@
+<!-- [formGroup]="form" conecta con el FormGroup del .ts; novalidate apaga las validaciones del navegador (usamos las de Angular) -->
+<form [formGroup]="form" (ngSubmit)="enviar()" novalidate>
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label for="nombre" class="form-label">Nombre</label>
+      <!-- [class.is-invalid]="mensaje('nombre')" = si hay mensaje de error agrega la clase de Bootstrap que pinta el borde de rojo -->
+      <input id="nombre" class="form-control" formControlName="nombre" [class.is-invalid]="mensaje('nombre')" />
+      <!-- @if (...; as m) = si hay mensaje lo guarda en "m" y lo dibuja; si no, no se dibuja nada -->
+      @if (mensaje('nombre'); as m) {
+        <div class="invalid-feedback">{{ m }}</div>
+      }
+    </div>
+    <div class="col-md-6 mb-3">
+      <label for="apellido" class="form-label">Apellido</label>
+      <input id="apellido" class="form-control" formControlName="apellido" [class.is-invalid]="mensaje('apellido')" />
+      @if (mensaje('apellido'); as m) {
+        <div class="invalid-feedback">{{ m }}</div>
+      }
+    </div>
+  </div>
+
+  <!-- Fila 2: correo y nombre de usuario -->
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label for="email" class="form-label">Correo</label>
+      <input id="email" type="email" class="form-control" formControlName="email" [class.is-invalid]="mensaje('email')" />
+      @if (mensaje('email'); as m) {
+        <div class="invalid-feedback">{{ m }}</div>
+      }
+    </div>
+    <div class="col-md-6 mb-3">
+      <label for="username" class="form-label">Nombre de usuario</label>
+      <input id="username" class="form-control" formControlName="username" [class.is-invalid]="mensaje('username')" />
+      @if (mensaje('username'); as m) {
+        <div class="invalid-feedback">{{ m }}</div>
+      }
+    </div>
+  </div>
+
+  <!-- Fila 3: contraseña y repetir contraseña. type="password" oculta lo que se escribe -->
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label for="password" class="form-label">Contraseña</label>
+      <input id="password" type="password" class="form-control" formControlName="password" [class.is-invalid]="mensaje('password')" />
+      @if (mensaje('password'); as m) {
+        <div class="invalid-feedback">{{ m }}</div>
+      }
+    </div>
+    <div class="col-md-6 mb-3">
+      <!-- Igual que contraseña; su error propio es "Las contraseñas no coinciden" -->
+      <label for="repetirPassword" class="form-label">Repetir contraseña</label>
+      <input id="repetirPassword" type="password" class="form-control" formControlName="repetirPassword" [class.is-invalid]="mensaje('repetirPassword')" />
+      @if (mensaje('repetirPassword'); as m) {
+        <div class="invalid-feedback">{{ m }}</div>
+      }
+    </div>
+  </div>
+
+  <!-- Fecha de nacimiento: type="date" muestra un calendario -->
+  <div class="mb-3">
+    <label for="fechaNacimiento" class="form-label">Fecha de nacimiento</label>
+    <input id="fechaNacimiento" type="date" class="form-control" formControlName="fechaNacimiento" [class.is-invalid]="mensaje('fechaNacimiento')" />
+    @if (mensaje('fechaNacimiento'); as m) {
+      <div class="invalid-feedback">{{ m }}</div>
+    }
+  </div>
+
+  <div class="mb-3">
+    <label for="descripcion" class="form-label">Descripción breve</label>
+    <textarea id="descripcion" rows="3" class="form-control" formControlName="descripcion" [class.is-invalid]="mensaje('descripcion')"></textarea>
+    @if (mensaje('descripcion'); as m) {
+      <div class="invalid-feedback">{{ m }}</div>
+    }
+  </div>
+
+  <!-- Foto de perfil: NO usa formControlName porque la foto no va dentro del FormGroup. #foto = referencia para vaciarla desde el .ts -->
+  <div class="mb-4">
+    <label for="imagen" class="form-label">Foto de perfil (opcional)</label>
+    <input
+      #foto
+      id="imagen"
+      type="file"
+      accept="image/jpeg,image/png,image/webp"
+      class="form-control"
+      [class.is-invalid]="errorArchivo()"
+      (change)="alElegirArchivo($event)"
+    />
+    <!-- Mensaje si la foto no es válida (tipo o tamaño) -->
+    @if (errorArchivo(); as e) {
+      <div class="invalid-feedback">{{ e }}</div>
+    }
+    <!-- Vista previa de la foto elegida -->
+    @if (preview(); as p) {
+      <img [src]="p" alt="Vista previa de la foto" class="preview mt-3" />
+    }
+  </div>
+
+  <!-- Perfil: solo se muestra cuando lo usa el administrador. Dos radio buttons con el mismo formControlName = una sola elección -->
+  @if (conPerfil()) {
+    <div class="mb-4">
+      <label class="form-label d-block">Perfil</label>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="perfilUsuario" value="usuario" formControlName="perfil" />
+        <label class="form-check-label" for="perfilUsuario">Usuario</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="perfilAdmin" value="administrador" formControlName="perfil" />
+        <label class="form-check-label" for="perfilAdmin">Administrador</label>
+      </div>
+    </div>
+  }
+
+  <!-- Deshabilitado si el formulario es inválido o si el padre está esperando al back -->
+  <button type="submit" class="btn btn-primary w-100" [disabled]="form.invalid || enviando()">
+    {{ enviando() ? textoEnviando() : textoBoton() }}
+  </button>
+</form>

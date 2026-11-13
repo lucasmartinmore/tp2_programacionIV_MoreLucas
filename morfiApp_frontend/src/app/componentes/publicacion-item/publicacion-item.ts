@@ -10,7 +10,6 @@
  * - xq ngOnInit y no el constructor? Porque los inputs recien tienen valor cuando el componente ya esta armado
  */
 import { Component, OnInit, computed, inject, input, output, signal } from '@angular/core';
-import { DatePipe } from '@angular/common';// DatePipe = el pipe "date" para formatear la fecha en el HTML
 import { HttpErrorResponse } from '@angular/common/http';
 import { Auth } from '../../servicios/auth';
 import { ModalService } from '../../servicios/modal';
@@ -18,10 +17,12 @@ import { PublicacionesService } from '../../servicios/publicaciones';
 import { mensajesDeError, tituloDeError } from '../../utils/errores';
 import { Publicacion } from '../../models/publicacion';// El tipo de dato de una publi
 import { RouterLink } from '@angular/router';
-
+import { TiempoRelativoPipe } from '../../pipes/tiempo-relativo.pipe';
+import { RecortarPipe } from '../../pipes/recortar.pipe';
+import { InicialesPipe } from '../../pipes/iniciales.pipe';
 
 @Component({
-  imports: [DatePipe, RouterLink],
+  imports: [RouterLink, TiempoRelativoPipe, RecortarPipe, InicialesPipe],
   selector: 'app-publicacion-item',
   styleUrl: './publicacion-item.css',
   templateUrl: './publicacion-item.html',

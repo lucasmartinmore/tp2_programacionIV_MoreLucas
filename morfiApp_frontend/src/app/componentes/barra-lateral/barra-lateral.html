@@ -1,0 +1,30 @@
+<!-- Contenedor pegajoso: acompaña al scrollear -->
+<div class="lateral">
+  <section class="card tarjeta mb-4">
+    <div class="card-body p-4">
+      <p class="lateral-etiqueta">Comunidad</p>
+      <h2 class="h5 mb-3">Reglas de la comunidad</h2>
+      <!-- ol numerado con contador en CSS -->
+      <ol class="reglas">
+        @for (r of reglas; track r.titulo) {
+          <li>
+            <strong>{{ r.titulo }}</strong>
+            <span>{{ r.texto }}</span>
+          </li>
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="card tarjeta">
+    <div class="card-body p-4">
+      <p class="lateral-etiqueta">Para publicar mejor</p>
+      <h2 class="h5 mb-3">Tips</h2>
+      <ul class="tips">
+        @for (c of consejos; track c) {
+          <li>{{ c }}</li>
+        }
+      </ul>
+    </div>
+  </section>
+</div>

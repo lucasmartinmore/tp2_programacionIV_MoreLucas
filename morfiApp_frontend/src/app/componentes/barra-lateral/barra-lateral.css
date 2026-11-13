@@ -1,0 +1,15 @@
+/* Se queda visible mientras se baja por el listado */
+.lateral { position: sticky; top: 1.5rem; }
+.lateral-etiqueta { text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.72rem; font-weight: 700; color: var(--sabor-verde); margin-bottom: 0.25rem; }
+/* Reglas numeradas */
+.reglas { list-style: none; counter-reset: regla; padding: 0; margin: 0; }
+.reglas li { counter-increment: regla; position: relative; display: flex; flex-direction: column; padding-left: 2.2rem; margin-bottom: 1rem; }
+.reglas li:last-child { margin-bottom: 0; }
+.reglas li::before { content: counter(regla); position: absolute; left: 0; top: 0; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--sabor-miel); color: var(--sabor-marron); font-weight: 700; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; }
+.reglas strong { color: var(--sabor-marron); }
+.reglas span { font-size: 0.9rem; color: var(--sabor-marron-suave); }
+/* Tips con un punto naranja */
+.tips { list-style: none; padding: 0; margin: 0; }
+.tips li { position: relative; padding-left: 1.2rem; margin-bottom: 0.6rem; font-size: 0.9rem; color: var(--sabor-marron-suave); }
+.tips li:last-child { margin-bottom: 0; }
+.tips li::before { content: ''; position: absolute; left: 0; top: 0.5em; width: 8px; height: 8px; border-radius: 50%; background: var(--sabor-naranja); }

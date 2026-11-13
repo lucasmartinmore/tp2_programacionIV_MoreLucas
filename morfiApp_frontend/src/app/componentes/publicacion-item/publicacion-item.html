@@ -1,41 +1,55 @@
-<!-- Tarjeta de una publicación. "tarjeta" es nuestra clase global; "mb-4" = margen abajo -->
-<article class="card tarjeta mb-4">
-  <!-- Encabezado: autor y fecha -->
-  <div class="card-body pb-2 d-flex align-items-center gap-3">
+<!-- Tarjeta de una publicación "h-100" = ocupa todo el alto de su columna para que todas las de una fila midan lo mismo -->
+<article class="card tarjeta h-100">
+  <!-- Encabezado compacto: autor y fecha -->
+  <div class="encabezado d-flex align-items-center gap-2">
     <!-- Foto del autor si tiene; si no, un círculo con su inicial -->
     @if (publicacion().usuario.imagenPerfilUrl) {
       <img [src]="publicacion().usuario.imagenPerfilUrl" alt="Foto del autor" class="avatar" />
     } @else {
-      <div class="avatar sin-foto">{{ publicacion().usuario.nombre.charAt(0) }}</div>
+      <!-- Avatar sin foto: las iniciales del autor con el pipe "iniciales" (Lalo Landa -> LL) -->
+<div class="avatar sin-foto">{{ (publicacion().usuario.nombre + ' ' + publicacion().usuario.apellido) | iniciales }}</div>
     }
-    <!-- Nombre, usuario y fecha. flex-grow-1 = ocupa el espacio sobrante -->
-    <div class="flex-grow-1">
-      <!-- Nombre completo del autor -->
-      <div class="fw-bold">{{ publicacion().usuario.nombre }} {{ publicacion().usuario.apellido }}</div>
-      <!-- &#64; es el símbolo @ (en Angular un @ suelto es un bloque de control). Pipe date = formato de fecha -->
-      <small class="text-muted">&#64;{{ publicacion().usuario.username }} · {{ publicacion().createdAt | date: 'dd/MM/yyyy HH:mm' }}</small>
-    </div>
-    <!-- Botón eliminar: solo aparece si la publicación es mía o soy administrador -->
+    <div class="flex-grow-1 autor">
+  <!-- [title] = al pasar el mouse se ve el nombre completo si está cortado -->
+  <span class="nombre" [title]="publicacion().usuario.nombre + ' ' + publicacion().usuario.apellido">{{ publicacion().usuario.nombre }} {{ publicacion().usuario.apellido }}</span>
+  <!-- &#64; es el símbolo @ (en Angular un @ suelto es un bloque de control) -->
+  <small class="usuario text-muted">&#64;{{ publicacion().usuario.username }}</small>
+  <!-- Pipe tiempoRelativo: "hace un momento", "hace 1 día" -->
+  <small class="fecha text-muted">{{ publicacion().createdAt | tiempoRelativo }}</small>
+</div>
+    <!-- Botón eliminar (ícono de papelera): solo aparece si la publicación es mía o soy administrador -->
     @if (puedeEliminar()) {
-      <button type="button" class="btn btn-outline-secondary btn-sm" (click)="pedirConfirmacion()">Eliminar</button>
+      <button type="button" class="btn-eliminar" title="Eliminar publicación" aria-label="Eliminar publicación" (click)="pedirConfirmacion()">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6" />
+        </svg>
+      </button>
     }
   </div>
 
-  <!-- Imagen de la publicación (solo si tiene) -->
+  <!-- Zona de la foto: SIEMPRE ocupa lo mismo. Con imagen se muestra recortada; sin imagen, un recuadro decorativo del mismo alto -->
   @if (publicacion().imagenUrl) {
     <img [src]="publicacion().imagenUrl" alt="Imagen de la publicación" class="imagen-publicacion" />
+  } @else {
+    <div class="sin-imagen" aria-hidden="true">
+      <svg viewBox="0 0 64 64" width="64" height="64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M16 8v12q0 6 6 6t6-6V8M22 8v48" />
+        <ellipse cx="44" cy="19" rx="7" ry="11" />
+        <path d="M44 30v26" />
+      </svg>
+    </div>
   }
 
-  <!-- Título y mensaje -->
-  <div class="card-body">
+  <!-- Título y mensaje (el título se corta a 2 líneas y el mensaje a 3) -->
+  <div class="card-body cuerpo">
     <!-- Título clickeable: lleva a la página de la publicación (/publicaciones/ID) -->
-<h3 class="h5 mb-2"><a [routerLink]="['/publicaciones', publicacion()._id]" class="text-decoration-none text-reset">{{ publicacion().titulo }}</a></h3>
-    <!-- La clase "mensaje" respeta los saltos de línea que escribió el usuario -->
-    <p class="mensaje mb-0">{{ publicacion().mensaje }}</p>
+    <h3 class="h5 mb-2 titulo"><a [routerLink]="['/publicaciones', publicacion()._id]" class="text-decoration-none text-reset">{{ publicacion().titulo }}</a></h3>
+   <!-- Mensaje cortado con el pipe "recortar" (parámetro: 120 caracteres) -->
+<p class="mensaje mb-0">{{ publicacion().mensaje | recortar: 120 }}</p>
   </div>
 
-  <!-- Pie: botón de me gusta -->
-  <div class="card-body pt-0 d-flex align-items-center gap-2">
+  <!-- Pie: me gusta y ver comentarios. Siempre pegado abajo de la tarjeta -->
+  <div class="card-body pie pt-0 d-flex align-items-center flex-wrap gap-2">
     <!-- [class.activo]="..." agrega la clase "activo" cuando leDiMeGusta() es true (pinta el corazón) -->
     <button
       type="button"
@@ -52,6 +66,6 @@
       <span>{{ cantidad() }}</span>
     </button>
     <!-- dentro del pie, después del botón de me gusta -->
-  <a [routerLink]="['/publicaciones', publicacion()._id]" class="btn btn-outline-secondary btn-sm">Ver y comentar</a>
+    <a [routerLink]="['/publicaciones', publicacion()._id]" class="btn btn-outline-secondary btn-sm">Ver y comentar</a>
   </div>
 </article>

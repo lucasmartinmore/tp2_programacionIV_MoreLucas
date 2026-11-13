@@ -22,7 +22,7 @@
       <div class="d-flex justify-content-between">
         <strong>{{ c.usuario.nombre }} {{ c.usuario.apellido }}</strong>
         <small class="text-muted">
-          {{ c.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+          {{ c.createdAt | tiempoRelativo }}
           <!-- Cartel "editado" si el back marcó modificado: true (lo pide el TP) -->
           @if (c.modificado) { <em>(editado)</em> }
         </small>
@@ -30,7 +30,7 @@
 
       <!-- Si este comentario se está editando: textarea + botones; si no: el texto -->
       @if (editandoId() === c._id) {
-        <textarea class="form-control my-2" rows="2" maxlength="500" [formControl]="edicion"></textarea>
+        <textarea appAutoFoco class="form-control my-2" rows="2" maxlength="500" [formControl]="edicion"></textarea>
         <!-- acciones-comentario: contenedor que separa los botones; accion-comentario: estilo de píldora -->
         <div class="acciones-comentario">
           <button type="button" class="accion-comentario principal" (click)="guardar(c)">Guardar</button>

@@ -34,4 +34,9 @@ export class UsuariosService {
   habilitar(id: string) {
     return this.http.post<Usuario>(`${this.url}/${id}/habilitar`, {});
   }
+
+  // PUT: el administrador cambia el perfil de otro usuario (devuelve el usuario actualizado)
+  cambiarPerfil(id: string, perfil: 'usuario' | 'administrador') {
+    return this.http.put<Usuario>(`${this.url}/${id}/perfil`, { perfil });
+  }
 }

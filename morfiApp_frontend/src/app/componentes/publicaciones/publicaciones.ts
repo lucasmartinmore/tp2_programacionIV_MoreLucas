@@ -14,13 +14,14 @@ import { ModalService } from '../../servicios/modal';
 import { PublicacionesService } from '../../servicios/publicaciones';
 import { mensajesDeError, tituloDeError } from '../../utils/errores';
 import { Orden, Publicacion } from '../../models/publicacion';
+import { BarraLateral } from '../barra-lateral/barra-lateral';
 // Los dos componentes hijos que usa este HTML.
 import { PublicacionItem } from '../publicacion-item/publicacion-item';
 import { NuevaPublicacion } from '../nueva-publicacion/nueva-publicacion';
 
 @Component({
   // importo los componentes hijos y routerLink para poder usarlos en el HTML
-  imports: [PublicacionItem, NuevaPublicacion, RouterLink],
+  imports: [PublicacionItem, NuevaPublicacion, RouterLink, BarraLateral],
   selector: 'app-publicaciones',
   styleUrl: './publicaciones.css',
   templateUrl: './publicaciones.html',
@@ -31,7 +32,7 @@ export class Publicaciones implements OnInit {
   private service = inject(PublicacionesService);
   private modal = inject(ModalService);
 
-  readonly porPagina = 5;  // Cuantas publicaciones se muestran por pagina
+  readonly porPagina = 6;  // Cuantas publicaciones se muestran por pagina
 
   // Estado de la pantalla
   publicaciones = signal<Publicacion[]>([]);

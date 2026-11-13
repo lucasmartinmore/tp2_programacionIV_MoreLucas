@@ -17,9 +17,10 @@ import { Auth } from '../../servicios/auth';
 import { ModalService } from '../../servicios/modal';
 import { mensajesDeError, tituloDeError } from '../../utils/errores';
 import { PATRON_PASSWORD } from '../../validators/usuario.validators';
+import { AutoFocoDirective } from '../../directives/auto-foco.directive';
 
 @Component({
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, AutoFocoDirective],
   selector: 'app-login',
   styleUrl: './login.css',
   templateUrl: './login.html',

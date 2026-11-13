@@ -1,5 +1,4 @@
 import { Component, OnInit, computed, inject, input, signal } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Auth } from '../../servicios/auth';
@@ -7,9 +6,11 @@ import { ComentariosService } from '../../servicios/comentarios';
 import { ModalService } from '../../servicios/modal';
 import { mensajesDeError, tituloDeError } from '../../utils/errores';
 import { Comentario } from '../../models/comentario';
+import { TiempoRelativoPipe } from '../../pipes/tiempo-relativo.pipe';
+import { AutoFocoDirective } from '../../directives/auto-foco.directive';
 
 @Component({
-  imports: [DatePipe, ReactiveFormsModule],
+  imports: [ReactiveFormsModule, TiempoRelativoPipe, AutoFocoDirective],
   selector: 'app-comentarios',
   styleUrl: './comentarios.css',
   templateUrl: './comentarios.html',

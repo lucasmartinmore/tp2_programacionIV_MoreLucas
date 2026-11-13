@@ -36,13 +36,14 @@ export class ComentariosService {
     await this.verificarPublicacion(publicacionId);
     const offset = dto.offset ?? 0;
     const limit = dto.limit ?? 5;// Por defecto 5 comentarios por tanda
-    const filtro = { publicacion: publicacionId };
+    // Solo los que no fueron eliminados
+    const filtro = { publicacion: publicacionId, activo: VISIBLE };
     const [items, total] = await Promise.all([
       this.comentarioModel
         .find(filtro)
-        .sort({ createdAt: -1, _id: -1 }) // más nuevos primero (_id desempata si hay misma fecha)
-        .skip(offset) // saltea los ya mostrados
-        .limit(limit) // trae la tanda
+        .sort({ createdAt: -1, _id: -1 })
+        .skip(offset)
+        .limit(limit)
         .populate('usuario', CAMPOS_AUTOR)
         .lean()
         .exec(),
